@@ -44,7 +44,7 @@ Column {
         command: ["systemctl", "poweroff"]
 
         KeyNavigation.up: logout
-        KeyNavigation.down: hibernate
+        KeyNavigation.down: suspend
     }
 
     AnimatedImage {
@@ -60,10 +60,10 @@ Column {
     }
 
     SessionButton {
-        id: hibernate
+        id: suspend
 
-        icon: "downloading"
-        command: ["systemctl", "hibernate"]
+        icon: "bedtime"
+        command: ["systemctl", "suspend"]
 
         KeyNavigation.up: shutdown
         KeyNavigation.down: reboot
@@ -75,7 +75,7 @@ Column {
         icon: "cached"
         command: ["systemctl", "reboot"]
 
-        KeyNavigation.up: hibernate
+        KeyNavigation.up: suspend
     }
 
     component SessionButton: StyledRect {
