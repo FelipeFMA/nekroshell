@@ -385,7 +385,7 @@ cd nekroshell
 
 ### 🤝 Contributing
 
-We welcome contributions! Here's how to get started:
+Contributions are welcome! Here's how to get started:
 
 1. **🍴 Fork** the repository
 2. **🌿 Create** your feature branch (`git checkout -b feature/AmazingFeature`)
@@ -452,30 +452,51 @@ Found a bug? Have a feature request?
 
 </div>
 
+---
+
+## 💖 Support the Project
+
+<div align="center">
+
+### 🙏 If you like NekroShell, please consider supporting its development!
+
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/felipefma)
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](mailto:felipefmavelar@gmail.com)
+[![Bitcoin](https://img.shields.io/badge/Bitcoin-FF9900?style=for-the-badge&logo=bitcoin&logoColor=white)](#bitcoin-donation)
+
+</div>
+
+<details>
+<summary><b>💰 Donation Methods</b></summary>
+
+<div align="center">
+
+| Method | Address/Link |
+|--------|--------------|
+| 🟠 **Bitcoin** | `bc1qnkq7hf6r53fg73jh3awfsn6ydeh87u5cf8hs3g` |
+| ☕ **Ko-fi** | [ko-fi.com/felipefma](https://ko-fi.com/felipefma) |
+| 💙 **PayPal** | felipefmavelar@gmail.com |
+| 🇧🇷 **Brazilian Pix** | felipefmavelar@gmail.com |
+
+<details>
+<summary><b>🪙 Bitcoin QR Code</b></summary>
+
+<img src="https://github.com/user-attachments/assets/9aaf40c6-6bdb-4480-8bdd-05b9023613d9" alt="Bitcoin QR Code" width="200" style="border-radius: 8px;" />
+
+</details>
+
+</div>
+
+</details>
+
+---
+
+<div align="center">
+
 **Made with ❤️ by FelipeFMA**
 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/your-username/nekroshell)
 
-
-*⭐ Star the project on GitHub — it helps!*
+*⭐ Star this project on GitHub — it helps!*
 
 </div>
-
----
-
-## If you like what I do, please consider donating :)
-Bitcoin:
-`bc1qnkq7hf6r53fg73jh3awfsn6ydeh87u5cf8hs3g`
-
-![bitcoin](https://github.com/user-attachments/assets/9aaf40c6-6bdb-4480-8bdd-05b9023613d9)
-
-Ko-fi:
-https://ko-fi.com/felipefma
-
-Paypal:
-felipefmavelar@gmail.com
-
-Brazilian Pix:
-felipefmavelar@gmail.com
-
----
