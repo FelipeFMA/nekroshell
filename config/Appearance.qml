@@ -36,8 +36,8 @@ Singleton {
     }
 
     component FontFamily: QtObject {
-        readonly property string sans: "IBM Plex Sans"
-        readonly property string mono: "JetBrains Mono NF"
+        readonly property string sans: "SF Pro"
+        readonly property string mono: "SF Pro"
         readonly property string material: "Material Symbols Rounded"
     }
 

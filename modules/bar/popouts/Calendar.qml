@@ -11,7 +11,7 @@ Column {
 
     padding: Appearance.padding.large
     spacing: Appearance.spacing.small
-    width: Config.bar.sizes.calendarWidth || 280
+    width: Config.bar.sizes.calendarWidth
 
     DayOfWeekRow {
         id: days
