@@ -9,7 +9,7 @@ import QtQuick
 Item {
     id: root
 
-    property color colour: Colours.palette.m3secondary
+    property color colour: "#ebdbb2"
 
     readonly property Item network: network
     readonly property real bs: bluetooth.y

@@ -6,7 +6,7 @@ import QtQuick
 Column {
     id: root
 
-    property color colour: Colours.palette.m3primary
+    property color colour: "#ebdbb2"
 
     spacing: Appearance.spacing.small
 
