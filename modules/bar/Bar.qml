@@ -15,8 +15,6 @@ Item {
 
     function checkPopout(y: real): void {
         const spacing = Appearance.spacing.small;
-        const aw = activeWindow.child;
-        const awy = activeWindow.y + aw.y;
 
         const ty = tray.y;
         const th = tray.implicitHeight;
@@ -34,11 +32,7 @@ Item {
         const cy = clockArea.y - spacing / 2;
         const cye = clockArea.y + clockArea.implicitHeight + spacing / 2;
 
-        if (y >= awy && y <= awy + aw.implicitHeight) {
-            popouts.currentName = "activewindow";
-            popouts.currentCenter = Qt.binding(() => activeWindow.y + aw.y + aw.implicitHeight / 2);
-            popouts.hasCurrent = true;
-        } else if (y > ty && y < ty + th) {
+        if (y > ty && y < ty + th) {
             const index = Math.floor(((y - ty) / th) * trayItems.count);
             const item = trayItems.itemAt(index);
 
@@ -79,7 +73,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
 
-        implicitWidth: Math.max(workspaces.implicitWidth, activeWindow.implicitWidth, tray.implicitWidth, clock.implicitWidth, statusIcons.implicitWidth, power.implicitWidth)
+        implicitWidth: Math.max(workspaces.implicitWidth, tray.implicitWidth, clock.implicitWidth, statusIcons.implicitWidth, power.implicitWidth)
 
         StyledRect {
             id: workspaces
@@ -115,21 +109,12 @@ Item {
             }
         }
 
-        ActiveWindow {
-            id: activeWindow
-
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: workspaces.bottom
-            anchors.bottom: tray.top
-            anchors.margins: Appearance.spacing.large
-
-            monitor: Brightness.getMonitorForScreen(root.screen)
-        }
-
         Tray {
             id: tray
 
             anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: workspaces.bottom
+            anchors.topMargin: Appearance.spacing.large
             anchors.bottom: clockArea.top
             anchors.bottomMargin: Appearance.spacing.larger
         }
