@@ -221,7 +221,7 @@ Item {
         anchors.margins: Appearance.padding.large * 2
 
         playing: root.shouldUpdate && (Players.active?.isPlaying ?? false)
-        speed: BeatDetector.bpm / 300
+        speed: 1.0
         source: "root:/assets/bongocat.gif"
         asynchronous: true
         fillMode: AnimatedImage.PreserveAspectFit
