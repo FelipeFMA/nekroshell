@@ -452,22 +452,30 @@ Found a bug? Have a feature request?
 
 </div>
 
----
-
-<div align="center">
-
-### 🌟 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=your-username/nekroshell&type=Date)](https://star-history.com/#your-username/nekroshell&Date)
-
----
-
-**Made with ❤️ by the NekroShell Community**
+**Made with ❤️ by FelipeFMA**
 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/your-username/nekroshell)
-[![Discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/your-discord)
-[![Matrix](https://img.shields.io/badge/Matrix-000000?style=for-the-badge&logo=Matrix&logoColor=white)](https://matrix.to/#/your-matrix-room)
 
-*⭐ Star us on GitHub — it helps!*
+
+*⭐ Star the project on GitHub — it helps!*
 
 </div>
+
+---
+
+## If you like what I do, please consider donating :)
+Bitcoin:
+`bc1qnkq7hf6r53fg73jh3awfsn6ydeh87u5cf8hs3g`
+
+![bitcoin](https://github.com/user-attachments/assets/9aaf40c6-6bdb-4480-8bdd-05b9023613d9)
+
+Ko-fi:
+https://ko-fi.com/felipefma
+
+Paypal:
+felipefmavelar@gmail.com
+
+Brazilian Pix:
+felipefmavelar@gmail.com
+
+---
