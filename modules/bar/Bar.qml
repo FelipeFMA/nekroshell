@@ -31,6 +31,9 @@ Item {
         const b = statusIconsInner.battery;
         const by = statusIcons.y + statusIconsInner.y + b.y - spacing / 2;
 
+        const cy = clockArea.y - spacing / 2;
+        const cye = clockArea.y + clockArea.implicitHeight + spacing / 2;
+
         if (y >= awy && y <= awy + aw.implicitHeight) {
             popouts.currentName = "activewindow";
             popouts.currentCenter = Qt.binding(() => activeWindow.y + aw.y + aw.implicitHeight / 2);
@@ -53,6 +56,10 @@ Item {
         } else if (y >= by && y <= by + b.implicitHeight + spacing) {
             popouts.currentName = "battery";
             popouts.currentCenter = Qt.binding(() => statusIcons.y + statusIconsInner.y + b.y + b.implicitHeight / 2);
+            popouts.hasCurrent = true;
+        } else if (y >= cy && y <= cye) {
+            popouts.currentName = "calendar";
+            popouts.currentCenter = Qt.binding(() => clockArea.y + clockArea.implicitHeight / 2);
             popouts.hasCurrent = true;
         } else {
             popouts.hasCurrent = false;
@@ -131,16 +138,43 @@ Item {
             id: tray
 
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: clock.top
+            anchors.bottom: clockArea.top
             anchors.bottomMargin: Appearance.spacing.larger
         }
 
-        Clock {
-            id: clock
+        Item {
+            id: clockArea
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: statusIcons.top
             anchors.bottomMargin: Appearance.spacing.normal
+
+            implicitWidth: clock.implicitWidth
+            implicitHeight: clock.implicitHeight
+
+            MouseArea {
+                anchors.fill: parent
+                anchors.leftMargin: -Config.border.thickness
+                anchors.rightMargin: -Config.border.thickness
+
+                hoverEnabled: true
+
+                onPositionChanged: event => {
+                    root.checkPopout(event.y + clockArea.y);
+                }
+
+                onExited: {
+                    if (!popouts.hasCurrent || popouts.currentName !== "calendar") {
+                        popouts.hasCurrent = false;
+                    }
+                }
+            }
+
+            Clock {
+                id: clock
+
+                anchors.centerIn: parent
+            }
         }
 
         StyledRect {

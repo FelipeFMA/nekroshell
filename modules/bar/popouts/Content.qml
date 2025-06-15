@@ -48,6 +48,11 @@ Item {
             source: "Battery.qml"
         }
 
+        Popout {
+            name: "calendar"
+            source: "Calendar.qml"
+        }
+
         Repeater {
             model: ScriptModel {
                 values: [...SystemTray.items.values]
