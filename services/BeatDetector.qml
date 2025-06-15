@@ -10,7 +10,7 @@ Singleton {
 
     Process {
         running: true
-        command: ["/usr/lib/nekroshell/beat_detector", "--no-log", "--no-stats", "--no-visual"]
+        command: ["./assets/beat_detector", "--no-log", "--no-stats", "--no-visual"]
         stdout: SplitParser {
             onRead: data => {
                 const match = data.match(/BPM: ([0-9]+\.[0-9])/);
