@@ -45,6 +45,28 @@ Scope {
         onPressed: root.launcherInterrupted = true
     }
 
+    CustomShortcut {
+        name: "nightLight"
+        description: "Toggle night light (wlsunset)"
+        onPressed: {
+            nightLightProc.startDetached();
+        }
+    }
+
+    Process {
+        id: nightLightProc
+
+        command: ["sh", "-c", `
+            if pkill -x wlsunset; then
+                echo "wlsunset was running and has been killed."
+            else
+                echo "wlsunset was not running. Starting wlsunset -t 4000 -T 4001..."
+                wlsunset -t 4000 -T 4001 &
+                echo "wlsunset started with PID $!"
+            fi
+        `]
+    }
+
     IpcHandler {
         target: "drawers"
 
