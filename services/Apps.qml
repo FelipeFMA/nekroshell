@@ -32,6 +32,16 @@ Singleton {
 
         property DesktopEntry entry
 
-        command: ["gtk-launch", entry?.id ?? ""]
+        command: {
+            // Try to use exec command directly, fallback to gtk-launch
+            const execCmd = entry?.exec ?? "";
+            if (execCmd) {
+                // Simple parsing: remove desktop entry field codes and split by space
+                const cleaned = execCmd.replace(/%[uUfFdDnNickvm]/g, "").trim();
+                const parts = cleaned.split(/\s+/).filter(part => part.length > 0);
+                return parts.length > 0 ? parts : ["gtk-launch", entry?.id ?? ""];
+            }
+            return ["gtk-launch", entry?.id ?? ""];
+        }
     }
 }
