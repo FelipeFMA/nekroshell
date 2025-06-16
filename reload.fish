@@ -2,4 +2,4 @@
 
 pkill -f quickshell
 sleep 0.2
-./run.fish
+./run.fish & disown
