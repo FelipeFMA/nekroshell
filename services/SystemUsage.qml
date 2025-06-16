@@ -154,12 +154,11 @@ Singleton {
         id: gpuUsage
 
         running: true
-        command: ["sh", "-c", "cat /sys/class/drm/card*/device/gpu_busy_percent"]
+        command: ["sh", "-c", "timeout 3s intel_gpu_top -s 500 -o - 2>/dev/null | tail -1 | awk 'NF>=9 {print $9}' | grep -E '^[0-9]+\\.[0-9]+$' || echo '0'"]
         stdout: StdioCollector {
             onStreamFinished: {
-                const percs = text.trim().split("\n");
-                const sum = percs.reduce((acc, d) => acc + parseInt(d, 10), 0);
-                root.gpuPerc = sum / percs.length / 100;
+                const usage = parseFloat(text.trim()) || 0;
+                root.gpuPerc = usage / 100;
             }
         }
     }
@@ -171,25 +170,68 @@ Singleton {
         command: ["sensors"]
         stdout: StdioCollector {
             onStreamFinished: {
+                let temp = 0;
+                let foundDedicatedGpu = false;
+                let foundIntegratedGpu = false;
+                
+                // First, try to find dedicated GPU temperature
                 let eligible = false;
-                let sum = 0;
-                let count = 0;
-
                 for (const line of text.trim().split("\n")) {
                     if (line === "Adapter: PCI adapter")
                         eligible = true;
                     else if (line === "")
                         eligible = false;
                     else if (eligible) {
-                        const match = line.match(/^(temp[0-9]+|GPU core|edge)+:\s+\+([0-9]+\.[0-9]+)°C/);
+                        const match = line.match(/^(temp[0-9]+|GPU core|edge):\s+\+([0-9]+\.[0-9]+)°C/);
                         if (match) {
-                            sum += parseFloat(match[2]);
-                            count++;
+                            temp = parseFloat(match[2]);
+                            foundDedicatedGpu = true;
+                            break;
                         }
                     }
                 }
-
-                root.gpuTemp = count > 0 ? sum / count : 0;
+                
+                // If no dedicated GPU found, look for Intel integrated (Package temperature)
+                if (!foundDedicatedGpu) {
+                    eligible = false;
+                    for (const line of text.trim().split("\n")) {
+                        if (line === "Adapter: ISA adapter")
+                            eligible = true;
+                        else if (line === "")
+                            eligible = false;
+                        else if (eligible) {
+                            // Look for Package id (Intel CPU/GPU package temp)
+                            const match = line.match(/^Package id [0-9]+:\s+\+([0-9]+\.[0-9]+)°C/);
+                            if (match) {
+                                temp = parseFloat(match[1]);
+                                foundIntegratedGpu = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                // If still no temperature found, try sysfs as fallback
+                if (!foundDedicatedGpu && !foundIntegratedGpu) {
+                    gpuTempSysfs.running = true;
+                } else {
+                    root.gpuTemp = temp;
+                }
+            }
+        }
+    }
+    
+    Process {
+        id: gpuTempSysfs
+        
+        running: false
+        command: ["sh", "-c", "cat /sys/class/thermal/thermal_zone5/temp 2>/dev/null || echo '0'"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const temp = parseInt(text.trim(), 10);
+                if (temp > 0) {
+                    root.gpuTemp = temp / 1000; // Convert from millidegrees
+                }
             }
         }
     }
