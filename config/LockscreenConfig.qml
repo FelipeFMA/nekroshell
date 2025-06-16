@@ -8,7 +8,7 @@ JsonObject {
     property bool showDate: true
     property bool showUserInfo: true
     property int maxAuthAttempts: 5
-    property int lockTimeout: 10000 // 10 seconds timeout for auth attempts
+    property int lockTimeout: 3000 // 3 seconds timeout for auth attempts
 
     property JsonObject sizes: JsonObject {
         property int containerWidth: 500
