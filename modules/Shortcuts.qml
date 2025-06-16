@@ -53,6 +53,12 @@ Scope {
         }
     }
 
+    CustomShortcut {
+        name: "lock"
+        description: "Lock the session"
+        onPressed: LockscreenService.lock()
+    }
+
     Process {
         id: nightLightProc
 

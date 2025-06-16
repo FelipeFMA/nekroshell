@@ -107,7 +107,7 @@ Singleton {
 
             function onClicked(list: AppList): void {
                 list.visibilities.launcher = false;
-                lock.running = true;
+                LockscreenService.lock();
             }
         },
         Action {

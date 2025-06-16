@@ -1,5 +1,6 @@
 pragma Singleton
 
+import "root:/config"
 import Quickshell
 import Quickshell.Io
 import QtQuick

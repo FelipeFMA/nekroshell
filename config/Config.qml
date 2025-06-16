@@ -11,6 +11,7 @@ Singleton {
     property alias border: adapter.border
     property alias dashboard: adapter.dashboard
     property alias launcher: adapter.launcher
+    property alias lockscreen: adapter.lockscreen
     property alias notifs: adapter.notifs
     property alias osd: adapter.osd
     property alias session: adapter.session
@@ -28,6 +29,7 @@ Singleton {
             property JsonObject border: BorderConfig {}
             property JsonObject dashboard: DashboardConfig {}
             property JsonObject launcher: LauncherConfig {}
+            property JsonObject lockscreen: LockscreenConfig {}
             property JsonObject notifs: NotifsConfig {}
             property JsonObject osd: OsdConfig {}
             property JsonObject session: SessionConfig {}

@@ -7,6 +7,7 @@ import Qt.labs.platform
 Singleton {
     id: root
 
+    readonly property string root: Quickshell.shellRoot
     readonly property url home: StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
     readonly property url pictures: StandardPaths.standardLocations(StandardPaths.PicturesLocation)[0]
 
