@@ -154,7 +154,25 @@ Singleton {
         id: gpuUsage
 
         running: true
-        command: ["sh", "-c", "timeout 3s intel_gpu_top -s 500 -o - 2>/dev/null | tail -1 | awk 'NF>=9 {print $9}' | grep -E '^[0-9]+\\.[0-9]+$' || echo '0'"]
+        command: ["sh", "-c", `
+            # Try Intel GPU first
+            if command -v intel_gpu_top >/dev/null 2>&1; then
+                timeout 3s intel_gpu_top -s 500 -o - 2>/dev/null | tail -1 | awk 'NF>=9 {print $9}' | grep -E '^[0-9]+\\.[0-9]+$' && exit 0
+            fi
+            
+            # Try NVIDIA GPU
+            if command -v nvidia-smi >/dev/null 2>&1; then
+                nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1 | grep -E '^[0-9]+$' && exit 0
+            fi
+            
+            # Try AMD GPU
+            if [ -f /sys/class/drm/card0/device/gpu_busy_percent ]; then
+                cat /sys/class/drm/card0/device/gpu_busy_percent 2>/dev/null && exit 0
+            fi
+            
+            # Fallback: no GPU usage available
+            echo '0'
+        `]
         stdout: StdioCollector {
             onStreamFinished: {
                 const usage = parseFloat(text.trim()) || 0;
