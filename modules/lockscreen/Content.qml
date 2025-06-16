@@ -12,6 +12,24 @@ Item {
 
     anchors.fill: parent
 
+    // Reset state when becoming visible again (fixes second lock issue)
+    onVisibleChanged: {
+        if (visible) {
+            console.log("Lockscreen content becoming visible - resetting state");
+            // Reset auth state
+            passwordContainer.authState = "idle";
+            passwordField.text = "";
+            
+            // Reset animation state and restart entrance animation
+            mainContainer.scale = 0.8;
+            mainContainer.opacity = 0;
+            entranceAnimation.restart();
+            
+            // Set focus after a short delay to ensure UI is ready
+            Qt.callLater(() => passwordField.forceActiveFocus());
+        }
+    }
+
     // Blurred background with wallpaper
     Item {
         id: backgroundLayer
@@ -426,8 +444,10 @@ Item {
     }
 
     Component.onCompleted: {
-        mainContainer.scale = 0.8;
-        mainContainer.opacity = 0;
-        entranceAnimation.start();
+        if (visible) {
+            mainContainer.scale = 0.8;
+            mainContainer.opacity = 0;
+            entranceAnimation.start();
+        }
     }
 }
