@@ -32,6 +32,7 @@ Item {
     implicitHeight: Math.max(cover.implicitHeight + Config.dashboard.sizes.mediaVisualiserSize * 2, details.implicitHeight, bongocat.implicitHeight) + Appearance.padding.large * 2
 
     Behavior on playerProgress {
+        enabled: Config.dashboard.enableAnimations
         NumberAnimation {
             duration: Appearance.anim.durations.large
             easing.type: Easing.BezierSpline
@@ -40,7 +41,7 @@ Item {
     }
 
     Timer {
-        running: root.shouldUpdate && (Players.active?.isPlaying ?? false)
+        running: root.shouldUpdate && (Players.active?.isPlaying ?? false) && Config.dashboard.enableMediaTimer
         interval: Config.dashboard.mediaUpdateInterval
         triggeredOnStart: true
         repeat: true
@@ -49,6 +50,7 @@ Item {
 
     Connections {
         target: Cava
+        enabled: Config.dashboard.enableVisualizer
 
         function onValuesChanged(): void {
             if (root.shouldUpdate)
@@ -58,6 +60,7 @@ Item {
 
     Canvas {
         id: visualiser
+        visible: Config.dashboard.enableVisualizer
 
         readonly property real centerX: width / 2
         readonly property real centerY: height / 2
@@ -71,6 +74,8 @@ Item {
         onColourChanged: requestPaint()
 
         onPaint: {
+            if (!Config.dashboard.enableVisualizer) return;
+            
             const ctx = getContext("2d");
             ctx.reset();
 
@@ -103,6 +108,7 @@ Item {
         }
 
         Behavior on colour {
+            enabled: Config.dashboard.enableAnimations
             ColorAnimation {
                 duration: Appearance.anim.durations.normal
                 easing.type: Easing.BezierSpline

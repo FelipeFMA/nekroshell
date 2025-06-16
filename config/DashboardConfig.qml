@@ -5,6 +5,12 @@ JsonObject {
     property int visualiserBars: 45
     property string weatherLocation: "" // A lat,long pair, e.g. "37.8267,-122.4233"
 
+    // Debug flags to disable potentially GPU-intensive components
+    property bool enableVisualizer: true        // Audio visualizer
+    property bool enableSystemMonitoring: true  // CPU/GPU/Memory monitoring
+    property bool enableMediaTimer: true        // Media player position updates
+    property bool enableAnimations: true        // All dashboard animations
+
     property JsonObject sizes: JsonObject {
         readonly property int tabIndicatorHeight: 3
         readonly property int tabIndicatorSpacing: 5

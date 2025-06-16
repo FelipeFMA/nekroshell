@@ -48,7 +48,7 @@ Singleton {
     }
 
     Timer {
-        running: true
+        running: Config.dashboard.enableSystemMonitoring
         interval: 3000
         repeat: true
         onTriggered: {
