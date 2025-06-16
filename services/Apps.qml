@@ -23,25 +23,79 @@ Singleton {
     }
 
     function launch(entry: DesktopEntry): void {
-        launchProc.entry = entry;
-        launchProc.startDetached();
+        // Read the desktop file directly to get the Exec command
+        readDesktopFileProc.entry = entry;
+        readDesktopFileProc.running = true;
+    }
+
+    function parseExecCommand(execString) {
+        if (!execString) return [];
+        
+        // Remove desktop entry field codes like %U, %F, %u, %f, etc.
+        var cleaned = execString.replace(/%[uUfFdDnNickvm]/g, "").trim();
+        
+        // Simple command parsing - split by spaces but handle quoted arguments
+        var parts = [];
+        var current = "";
+        var inQuotes = false;
+        var quoteChar = "";
+        
+        for (var i = 0; i < cleaned.length; i++) {
+            var currentChar = cleaned[i];
+            
+            if (!inQuotes && (currentChar === '"' || currentChar === "'")) {
+                inQuotes = true;
+                quoteChar = currentChar;
+            } else if (inQuotes && currentChar === quoteChar) {
+                inQuotes = false;
+                quoteChar = "";
+            } else if (!inQuotes && currentChar === ' ') {
+                if (current.trim()) {
+                    parts.push(current.trim());
+                    current = "";
+                }
+            } else {
+                current += currentChar;
+            }
+        }
+        
+        if (current.trim()) {
+            parts.push(current.trim());
+        }
+        
+        return parts;
+    }
+
+    Process {
+        id: readDesktopFileProc
+        
+        property DesktopEntry entry
+        
+        command: ["sh", "-c", "grep -m1 \"^Exec=\" /usr/share/applications/" + (entry?.id ?? "") + ".desktop 2>/dev/null || echo \"Exec=\""]
+        
+        stdout: StdioCollector {
+            onStreamFinished: {
+                var output = text.trim();
+                var execMatch = output.match(/^Exec=(.*)$/);
+                if (execMatch && execMatch[1]) {
+                    var execCommand = execMatch[1];
+                    console.log("Found exec command:", execCommand);
+                    var parsedCommand = root.parseExecCommand(execCommand);
+                    if (parsedCommand.length > 0) {
+                        launchProc.command = parsedCommand;
+                        launchProc.startDetached();
+                    } else {
+                        console.log("Failed to parse exec command:", execCommand);
+                    }
+                } else {
+                    console.log("No Exec line found in desktop file for:", readDesktopFileProc.entry?.id);
+                }
+            }
+        }
     }
 
     Process {
         id: launchProc
-
-        property DesktopEntry entry
-
-        command: {
-            // Try to use exec command directly, fallback to gtk-launch
-            const execCmd = entry?.exec ?? "";
-            if (execCmd) {
-                // Simple parsing: remove desktop entry field codes and split by space
-                const cleaned = execCmd.replace(/%[uUfFdDnNickvm]/g, "").trim();
-                const parts = cleaned.split(/\s+/).filter(part => part.length > 0);
-                return parts.length > 0 ? parts : ["gtk-launch", entry?.id ?? ""];
-            }
-            return ["gtk-launch", entry?.id ?? ""];
-        }
+        // Command will be set dynamically by readDesktopFileProc
     }
 }
