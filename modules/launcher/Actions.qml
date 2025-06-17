@@ -155,7 +155,7 @@ Singleton {
     Process {
         id: logout
 
-        command: ["bash", "-c", "(uwsm stop | grep -q 'Compositor is not running' && loginctl terminate-user $USER) || uwsm stop"]
+        command: ["loginctl", "terminate-user", "$USER"]
     }
 
     Process {
