@@ -29,7 +29,8 @@
 - **📊 Live Dashboard**: Real-time system monitoring with beautiful visualizations
 - **🔔 Modern Notifications**: Elegant notification system with popup management
 - **⚙️ Quick Settings**: OSD controls for volume, brightness, and system settings
-- **🔐 Session Manager**: Secure logout, shutdown, and system control
+- **🔐 Secure Lockscreen**: Advanced authentication system with PAM integration
+- **🎭 Session Manager**: Secure logout, shutdown, and system control
 
 </details>
 
@@ -42,6 +43,7 @@
 - **🎭 Smooth Animations**: Fluid transitions using Bézier curves
 - **📐 Responsive Layout**: Adaptive UI that scales perfectly on any display
 - **✨ Glass Morphism**: Beautiful blur effects and transparency layers
+- **🔒 Secure Interface**: Password masking and visual feedback systems
 
 </details>
 
@@ -54,6 +56,19 @@
 - **🖥️ Multi-Monitor Support**: Perfect scaling across multiple displays
 - **🎵 Media Control**: MPRIS integration with Spotify optimization
 - **📡 System Integration**: Native D-Bus, network, and hardware support
+- **🔐 PAM Authentication**: Secure user authentication via Linux PAM system
+
+</details>
+
+<details>
+<summary><b>🔒 Security & Privacy</b></summary>
+
+- **🛡️ PAM Integration**: System-level authentication using Linux PAM
+- **🔐 Secure Password Handling**: No password storage, direct PAM validation
+- **🎭 Visual Privacy**: Configurable password masking and length hiding
+- **⚡ Brute Force Protection**: Configurable authentication attempt limits
+- **🔄 Auto-Clear**: Automatic password field clearing on errors
+- **🎨 Visual Feedback**: Shake animations and status indicators for security events
 
 </details>
 
@@ -79,9 +94,10 @@ NekroShell is architecturally designed with a sophisticated modular approach:
 │   ├── 📊 bar/ (Status Bar & Popouts)
 │   ├── 🎮 dashboard/ (System Dashboard)
 │   ├── 🚀 launcher/ (Application Launcher)
-│   ├── 🔔 notifications/ (Notification System)
+│   ├── � lockscreen/ (Secure Authentication)
+│   ├── �🔔 notifications/ (Notification System)
 │   ├── 🎛️ osd/ (On-Screen Display)
-│   └── 🔐 session/ (Session Management)
+│   └── 🎭 session/ (Session Management)
 ├── 🔧 services/ (Backend Logic)
 ├── ⚙️ config/ (Configuration System)
 ├── 🎨 widgets/ (Reusable Components)
@@ -136,6 +152,7 @@ The shell operates through a sophisticated service layer:
 | 📊 **SystemUsage** | Performance monitoring | CPU, memory, storage tracking |
 | 🖼️ **Wallpapers** | Background management | Fuzzy search, preview system |
 | 🔔 **Notifications** | Message system | D-Bus notification server |
+| 🔐 **LockscreenService** | Authentication | PAM integration, secure unlock system |
 | 🎨 **Colours** | Theme management | Dynamic color scheme switching |
 
 ---
@@ -165,6 +182,7 @@ pipewire       # Audio system
 networkmanager # Network management
 brightnessctl  # Brightness control (or ddcutil)
 cava          # Audio visualizer
+pam            # Authentication system (for lockscreen)
 
 # Optional but Recommended
 hyprland      # Optimized window manager
@@ -178,7 +196,7 @@ fish          # Shell for scripts
 
 ```bash
 # Install dependencies
-paru -S quickshell-git qt6-multimedia qt6-svg pipewire networkmanager brightnessctl cava hyprland fish
+paru -S quickshell-git qt6-multimedia qt6-svg pipewire networkmanager brightnessctl cava hyprland fish pam
 
 # Clone NekroShell
 git clone https://github.com/your-username/nekroshell.git
@@ -189,6 +207,8 @@ chmod +x run.fish reload.fish
 
 # Launch NekroShell
 ./run.fish
+
+# Configure your window manager keybindings (see Usage section)
 ```
 
 </details>
@@ -199,13 +219,15 @@ chmod +x run.fish reload.fish
 ```bash
 # Add QuickShell repository (if available) or build from source
 # Install dependencies
-sudo apt install qt6-multimedia-dev qt6-svg-dev pipewire networkmanager cava fish
+sudo apt install qt6-multimedia-dev qt6-svg-dev pipewire networkmanager cava fish libpam0g-dev
 
 # Clone and setup (same as above)
 git clone https://github.com/your-username/nekroshell.git
 cd nekroshell
 chmod +x run.fish reload.fish
 ./run.fish
+
+# Configure your window manager keybindings (see Usage section)
 ```
 
 </details>
@@ -215,13 +237,15 @@ chmod +x run.fish reload.fish
 
 ```bash
 # Install dependencies
-sudo dnf install qt6-qtmultimedia qt6-qtsvg pipewire NetworkManager cava fish
+sudo dnf install qt6-qtmultimedia qt6-qtsvg pipewire NetworkManager cava fish pam-devel
 
 # Clone and setup
 git clone https://github.com/your-username/nekroshell.git
 cd nekroshell
 chmod +x run.fish reload.fish
 ./run.fish
+
+# Configure your window manager keybindings (see Usage section)
 ```
 
 </details>
@@ -279,19 +303,64 @@ NekroShell uses a sophisticated JSON-based configuration system:
 
 </details>
 
+<details>
+<summary><b>🔐 Lockscreen Settings</b></summary>
+
+```json
+{
+  "lockscreen": {
+    "enableBlur": true,
+    "blurRadius": 64,
+    "backgroundOpacity": 0.3,
+    "showClock": true,
+    "showDate": true,
+    "showUserInfo": true,
+    "maxAuthAttempts": 5,
+    "security": {
+      "hidePasswordLength": false,
+      "enableShakeAnimation": true,
+      "clearPasswordOnError": true
+    }
+  }
+}
+```
+
+</details>
+
 ---
 
 ## 🎮 Usage & Shortcuts
 
-### ⌨️ Global Shortcuts
+### ⌨️ Window Manager Configuration
 
-| Shortcut | Action | Description |
-|----------|--------|-------------|
-| `Super + Space` | **Launch** | Toggle application launcher |
-| `Super + D` | **Dashboard** | Open system dashboard |
-| `Super + Shift + Q` | **Session** | Open session menu |
-| `Super + A` | **Show All** | Toggle all panels |
-| `Ctrl + Alt + R` | **Reload** | Restart NekroShell |
+NekroShell doesn't handle global shortcuts directly - these are configured in your window manager and communicated via D-Bus. Here are recommended keybindings for common window managers:
+
+**🔲 Hyprland Configuration** (`~/.config/hypr/hyprland.conf`):
+```bash
+# NekroShell shortcuts
+bind = $mainMod, SPACE, global, nekroshell:launcher    # Toggle launcher
+bind = $mainMod, D, global, nekroshell:dashboard       # Toggle dashboard  
+bind = $mainMod SHIFT, Q, global, nekroshell:session   # Toggle session menu
+bind = $mainMod, L, global, nekroshell:lock           # Lock screen
+bind = $mainMod, A, global, nekroshell:showAll        # Toggle all panels
+bind = $mainMod, K, global, nekroshell:nightLight     # Toggle night light
+```
+
+**🪟 Other Window Managers**:
+NekroShell uses D-Bus for global shortcut communication. Configure your window manager to send D-Bus signals to the `nekroshell` namespace.
+
+### 🎯 Available Global Shortcuts
+
+NekroShell responds to these D-Bus global shortcut identifiers:
+
+| Identifier | Action | Description |
+|------------|--------|-------------|
+| `nekroshell:launcher` | Toggle Launcher | Open/close application launcher |
+| `nekroshell:dashboard` | Toggle Dashboard | Open/close system dashboard |
+| `nekroshell:session` | Toggle Session | Open/close session manager |
+| `nekroshell:lock` | Lock Screen | Activate screen lock |
+| `nekroshell:showAll` | Show All Panels | Toggle visibility of all panels |
+| `nekroshell:nightLight` | Night Light | Toggle night light mode |
 
 ### 🎯 Launcher Actions
 
