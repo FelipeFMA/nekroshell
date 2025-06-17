@@ -39,6 +39,9 @@ Column {
         anchors.margins: parent.padding
 
         spacing: 3
+        locale: Qt.locale()
+        month: new Date().getMonth()
+        year: new Date().getFullYear()
 
         delegate: Item {
             id: day
@@ -55,7 +58,14 @@ Column {
                 implicitHeight: parent.implicitHeight
 
                 radius: Appearance.rounding.full
-                color: model.today ? Colours.palette.m3primary : "transparent"
+                color: {
+                    const today = new Date()
+                    const modelDate = day.model.date
+                    const isToday = modelDate.getDate() === today.getDate() && 
+                                  modelDate.getMonth() === today.getMonth() && 
+                                  modelDate.getFullYear() === today.getFullYear()
+                    return isToday ? Colours.palette.m3primary : "transparent"
+                }
 
                 StyledText {
                     id: text
@@ -64,7 +74,14 @@ Column {
 
                     horizontalAlignment: Text.AlignHCenter
                     text: grid.locale.toString(day.model.date, "d")
-                    color: day.model.today ? Colours.palette.m3onPrimary : day.model.month === grid.month ? Colours.palette.m3onSurfaceVariant : Colours.palette.m3outline
+                    color: {
+                        const today = new Date()
+                        const modelDate = day.model.date
+                        const isToday = modelDate.getDate() === today.getDate() && 
+                                      modelDate.getMonth() === today.getMonth() && 
+                                      modelDate.getFullYear() === today.getFullYear()
+                        return isToday ? Colours.palette.m3onPrimary : day.model.month === grid.month ? Colours.palette.m3onSurfaceVariant : Colours.palette.m3outline
+                    }
                 }
             }
         }
