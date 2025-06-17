@@ -23,32 +23,8 @@ Singleton {
     }
 
     function launch(entry: DesktopEntry): void {
-        readDesktopFileProc.entry = entry;
-        readDesktopFileProc.running = true;
-    }
-
-    Process {
-        id: readDesktopFileProc
-        
-        property DesktopEntry entry
-        
-        command: ["sh", "-c", "grep -m1 \"^Exec=\" /usr/share/applications/" + (entry?.id ?? "") + ".desktop 2>/dev/null || echo \"Exec=\""]
-        
-        stdout: StdioCollector {
-            onStreamFinished: {
-                var output = text.trim();
-                var execMatch = output.match(/^Exec=(.*)$/);
-                if (execMatch && execMatch[1]) {
-                    var execCommand = execMatch[1];
-                    var cleaned = execCommand.replace(/%[uUfFdDnNickvm]/g, "").trim();
-                    var parts = cleaned.split(/\s+/).filter(function(part) { return part.length > 0; });
-                    if (parts.length > 0) {
-                        launchProc.command = parts;
-                        launchProc.startDetached();
-                    }
-                }
-            }
-        }
+        launchProc.command = ["bash", "-c", "gtk-launch " + entry.id + " >/dev/null 2>&1"];
+        launchProc.startDetached();
     }
 
     Process {
