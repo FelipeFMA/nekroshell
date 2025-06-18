@@ -1,5 +1,8 @@
 #!/bin/sh
 
+pkill -f quickshell
+sleep 0.2
+
 # Initialize nekroshell configuration directories and files
 config_dir="$HOME/.local/state/nekroshell"
 wallpaper_dir="$config_dir/wallpaper"
