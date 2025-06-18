@@ -155,10 +155,53 @@ StyledRect {
                     width: Math.round(parent.width * 0.6)
                     height: Math.round(parent.width * 0.6)
 
-                    sourceComponent: IconImage {
-                        implicitSize: Math.round(parent.width * 0.6)
-                        source: Quickshell.iconPath(root.modelData.appIcon)
-                        asynchronous: true
+                    sourceComponent: Item {
+                        implicitWidth: Math.round(parent.width * 0.6)
+                        implicitHeight: Math.round(parent.width * 0.6)
+
+                        // Try to load as image first if it's a file path
+                        Image {
+                            id: fileImage
+                            anchors.fill: parent
+                            source: {
+                                const isFilePath = root.modelData.appIcon.startsWith("file://") || root.modelData.appIcon.startsWith("/");
+                                if (isFilePath) {
+                                    console.log("Loading notification icon as file:", root.modelData.appIcon);
+                                    return root.modelData.appIcon;
+                                }
+                                return "";
+                            }
+                            asynchronous: true
+                            cache: false
+                            fillMode: Image.PreserveAspectFit
+                            visible: status === Image.Ready
+                            
+                            onStatusChanged: {
+                                if (status === Image.Error) {
+                                    console.warn("Failed to load notification icon file:", root.modelData.appIcon);
+                                }
+                            }
+                        }
+
+                        // Fallback to icon if image fails or if it's not a file path
+                        IconImage {
+                            anchors.fill: parent
+                            source: {
+                                const isFilePath = root.modelData.appIcon.startsWith("file://") || root.modelData.appIcon.startsWith("/");
+                                if (isFilePath) {
+                                    // For file paths that failed, try common browser icon names
+                                    if (fileImage.status === Image.Error) {
+                                        return Quickshell.iconPath("google-chrome") || Quickshell.iconPath("web-browser") || Quickshell.iconPath("application-x-executable");
+                                    }
+                                    return ""; // Don't try to load file paths as icon names
+                                }
+                                const iconPath = Quickshell.iconPath(root.modelData.appIcon, "web");
+                                console.log("Loading notification icon from theme:", root.modelData.appIcon, "->", iconPath);
+                                return iconPath;
+                            }
+                            asynchronous: true
+                            visible: fileImage.status !== Image.Ready
+                        }
                     }
                 }
 
@@ -372,29 +415,137 @@ StyledRect {
             anchors.left: summary.left
             anchors.right: expandBtn.left
             anchors.top: summary.bottom
+            anchors.topMargin: Appearance.spacing.small
             anchors.rightMargin: Appearance.spacing.small
 
             animate: true
-            textFormat: Text.MarkdownText
-            text: bodyPreviewMetrics.elidedText
+            textFormat: Text.RichText
+            text: {
+                let content = root.modelData?.body || "";
+                if (!content) return "";
+                
+                // Process the content to move links to end and style them
+                let links = [];
+                let textWithoutLinks = content;
+                
+                // Find HTML links and extract them
+                const htmlLinkRegex = /<a[^>]*href="([^"]*)"[^>]*>([^<]*)<\/a>/g;
+                let match;
+                while ((match = htmlLinkRegex.exec(content)) !== null) {
+                    if (match[1] && match[2]) {
+                        links.push(`<a href="${match[1]}" style="color: #FBF1C7;">${match[2]}</a>`);
+                        textWithoutLinks = textWithoutLinks.replace(match[0], '');
+                    }
+                }
+                
+                // Find markdown links
+                const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+                while ((match = markdownLinkRegex.exec(textWithoutLinks)) !== null) {
+                    if (match[1] && match[2]) {
+                        links.push(`<a href="${match[2]}" style="color: #FBF1C7;">${match[1]}</a>`);
+                        textWithoutLinks = textWithoutLinks.replace(match[0], '');
+                    }
+                }
+                
+                // Clean up text
+                textWithoutLinks = textWithoutLinks.replace(/\s+/g, ' ').trim();
+                
+                // For collapsed view, limit the text length
+                const maxLength = 100; // Adjust this value as needed
+                let truncatedText = textWithoutLinks;
+                let needsEllipsis = false;
+                
+                if (textWithoutLinks.length > maxLength) {
+                    truncatedText = textWithoutLinks.substring(0, maxLength).trim();
+                    // Make sure we don't cut off in the middle of a word
+                    const lastSpace = truncatedText.lastIndexOf(' ');
+                    if (lastSpace > maxLength * 0.8) { // Only cut at word boundary if it's not too short
+                        truncatedText = truncatedText.substring(0, lastSpace);
+                    }
+                    needsEllipsis = true;
+                }
+                
+                // Combine text with links at the end
+                let result = truncatedText || "";
+                if (needsEllipsis) {
+                    result += '...';
+                }
+                if (links.length > 0 && !needsEllipsis) {
+                    result += (truncatedText ? '<br>' : '') + links.join(' ');
+                }
+                
+                return result || "";
+            }
             color: Colours.palette.m3onSurfaceVariant
             font.pointSize: Appearance.font.size.small
+            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+            maximumLineCount: 2
+            elide: Text.ElideRight
 
             opacity: root.expanded ? 0 : 1
+            visible: opacity > 0
 
             Behavior on opacity {
                 Anim {}
             }
         }
 
+        property string processedBodyText: {
+            let content = root.modelData?.body || "";
+            if (!content) return "";
+            
+            // Extract links and move them to the end
+            let links = [];
+            let textWithoutLinks = content;
+            
+            // Find HTML links
+            const htmlLinkRegex = /<a[^>]*href="([^"]*)"[^>]*>([^<]*)<\/a>/g;
+            let match;
+            while ((match = htmlLinkRegex.exec(content)) !== null) {
+                if (match[2]) {
+                    links.push(match[2]); // Just the link text for TextMetrics
+                    textWithoutLinks = textWithoutLinks.replace(match[0], '');
+                }
+            }
+            
+            // Find markdown links
+            const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+            while ((match = markdownLinkRegex.exec(content)) !== null) {
+                if (match[1]) {
+                    links.push(match[1]); // Just the link text for TextMetrics
+                    textWithoutLinks = textWithoutLinks.replace(match[0], '');
+                }
+            }
+            
+            // Find plain URLs
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            while ((match = urlRegex.exec(textWithoutLinks)) !== null) {
+                if (match[1]) {
+                    links.push(match[1]); // The URL itself
+                    textWithoutLinks = textWithoutLinks.replace(match[1], '');
+                }
+            }
+            
+            // Clean up extra spaces
+            textWithoutLinks = textWithoutLinks.replace(/\s+/g, ' ').trim();
+            
+            // Combine text with links at the end (plain text for TextMetrics)
+            let result = textWithoutLinks || "";
+            if (links.length > 0) {
+                result += (textWithoutLinks ? ' ' : '') + links.join(' ');
+            }
+            
+            return result;
+        }
+
         TextMetrics {
             id: bodyPreviewMetrics
 
-            text: root.modelData.body
+            text: root.processedBodyText || ""
             font.family: bodyPreview.font.family
             font.pointSize: bodyPreview.font.pointSize
             elide: Text.ElideRight
-            elideWidth: bodyPreview.width
+            elideWidth: Math.max(bodyPreview.width, 200) // Ensure minimum width
         }
 
         StyledText {
@@ -406,8 +557,57 @@ StyledRect {
             anchors.rightMargin: Appearance.spacing.small
 
             animate: true
-            textFormat: Text.MarkdownText
-            text: root.modelData.body
+            textFormat: Text.RichText
+            text: {
+                let content = root.modelData?.body || "";
+                if (!content) return "";
+                
+                // Extract links and move them to the end
+                let links = [];
+                let textWithoutLinks = content;
+                
+                // Find HTML links
+                const htmlLinkRegex = /<a[^>]*href="([^"]*)"[^>]*>([^<]*)<\/a>/g;
+                let match;
+                while ((match = htmlLinkRegex.exec(content)) !== null) {
+                    if (match[1] && match[2]) {
+                        links.push(`<a href="${match[1]}">${match[2]}</a>`);
+                        textWithoutLinks = textWithoutLinks.replace(match[0], '');
+                    }
+                }
+                
+                // Find markdown links
+                const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+                while ((match = markdownLinkRegex.exec(content)) !== null) {
+                    if (match[1] && match[2]) {
+                        links.push(`<a href="${match[2]}">${match[1]}</a>`);
+                        textWithoutLinks = textWithoutLinks.replace(match[0], '');
+                    }
+                }
+                
+                // Find plain URLs
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                while ((match = urlRegex.exec(textWithoutLinks)) !== null) {
+                    if (match[1]) {
+                        links.push(`<a href="${match[1]}">${match[1]}</a>`);
+                        textWithoutLinks = textWithoutLinks.replace(match[1], '');
+                    }
+                }
+                
+                // Clean up extra spaces
+                textWithoutLinks = textWithoutLinks.replace(/\s+/g, ' ').trim();
+                
+                // Combine text with links at the end
+                let result = '<style>a { color: #FBF1C7; }</style>';
+                if (textWithoutLinks) {
+                    result += textWithoutLinks;
+                }
+                if (links.length > 0) {
+                    result += (textWithoutLinks ? '<br>' : '') + links.join(' ');
+                }
+                
+                return result || "";
+            }
             color: Colours.palette.m3onSurfaceVariant
             font.pointSize: Appearance.font.size.small
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
