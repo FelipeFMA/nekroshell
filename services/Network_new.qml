@@ -9,9 +9,6 @@ Singleton {
 
     readonly property list<AccessPoint> networks: []
     readonly property AccessPoint active: networks.find(n => n.active) ?? null
-    
-    property bool connectionInProgress: false
-    property string connectionResult: ""
 
     reloadableId: "network"
 
@@ -20,47 +17,18 @@ Singleton {
     }
 
     function connectToNetwork(ssid, password = "") {
-        connectionInProgress = true;
-        connectionResult = "";
-        
         if (password === "") {
-            // First try to connect using saved connection
-            connectKnownProcess.command = ["nmcli", "connection", "up", "id", ssid];
-            connectKnownProcess.running = true;
+            // Connect to open network
+            connectProcess.command = ["nmcli", "device", "wifi", "connect", ssid];
         } else {
-            // Connect to secured network with password
+            // Connect to secured network
             connectProcess.command = ["nmcli", "device", "wifi", "connect", ssid, "password", password];
-            connectProcess.running = true;
         }
+        connectProcess.running = true;
     }
 
     function disconnectFromNetwork() {
         disconnectProcess.running = true;
-    }
-
-    Process {
-        id: connectKnownProcess
-        running: false
-        stdout: SplitParser {
-            onRead: {
-                const output = text.trim();
-                if (output.includes("successfully activated") || output.includes("Connection successfully activated")) {
-                    console.log("Connected using saved connection");
-                    root.connectionInProgress = false;
-                    root.connectionResult = "success";
-                    getNetworks.running = true;
-                } else {
-                    console.log("Connection output:", output);
-                }
-            }
-        }
-        stderr: SplitParser {
-            onRead: {
-                console.log("Failed to connect with saved connection, need password");
-                root.connectionInProgress = false;
-                root.connectionResult = "need_password";
-            }
-        }
     }
 
     Process {
@@ -69,16 +37,7 @@ Singleton {
         stdout: SplitParser {
             onRead: {
                 console.log("Network connection result:", text);
-                root.connectionInProgress = false;
-                root.connectionResult = text.includes("successfully") ? "success" : "failed";
                 getNetworks.running = true; // Refresh network list
-            }
-        }
-        stderr: SplitParser {
-            onRead: {
-                console.log("Network connection error:", text);
-                root.connectionInProgress = false;
-                root.connectionResult = "failed";
             }
         }
     }
@@ -117,13 +76,13 @@ Singleton {
                     const net = n.replace(rep, PLACEHOLDER).split(":");
                     return {
                         active: net[0] === "yes",
-                        strength: parseInt(net[1]) || 0,
-                        frequency: parseInt(net[2]) || 0,
-                        ssid: net[3] || "",
-                        bssid: (net[4] || "").replace(rep2, ":"),
+                        strength: parseInt(net[1]),
+                        frequency: parseInt(net[2]),
+                        ssid: net[3],
+                        bssid: net[4].replace(rep2, ":"),
                         security: net[5] || ""
                     };
-                }).filter(n => n.ssid !== "");
+                });
                 const rNetworks = root.networks;
 
                 const destroyed = rNetworks.filter(rn => !networks.find(n => n.frequency === rn.frequency && n.ssid === rn.ssid && n.bssid === rn.bssid));
@@ -146,11 +105,11 @@ Singleton {
 
     component AccessPoint: QtObject {
         required property var lastIpcObject
-        readonly property string ssid: lastIpcObject.ssid || ""
-        readonly property string bssid: lastIpcObject.bssid || ""
-        readonly property int strength: lastIpcObject.strength || 0
-        readonly property int frequency: lastIpcObject.frequency || 0
-        readonly property bool active: lastIpcObject.active || false
+        readonly property string ssid: lastIpcObject.ssid
+        readonly property string bssid: lastIpcObject.bssid
+        readonly property int strength: lastIpcObject.strength
+        readonly property int frequency: lastIpcObject.frequency
+        readonly property bool active: lastIpcObject.active
         readonly property string security: lastIpcObject.security || ""
         readonly property bool isSecured: security !== "" && security !== "--"
     }

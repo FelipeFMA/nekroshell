@@ -167,6 +167,24 @@ Item {
 
             implicitHeight: statusIconsInner.implicitHeight + Appearance.padding.normal * 2
 
+            MouseArea {
+                anchors.fill: parent
+                anchors.leftMargin: -Config.border.thickness
+                anchors.rightMargin: -Config.border.thickness
+
+                hoverEnabled: true
+
+                onPositionChanged: event => {
+                    root.checkPopout(event.y + statusIcons.y);
+                }
+
+                onExited: {
+                    if (!popouts.hasCurrent || (popouts.currentName !== "network" && popouts.currentName !== "bluetooth" && popouts.currentName !== "battery")) {
+                        popouts.hasCurrent = false;
+                    }
+                }
+            }
+
             StatusIcons {
                 id: statusIconsInner
 

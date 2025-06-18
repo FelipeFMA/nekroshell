@@ -6,6 +6,7 @@ JsonObject {
         property int windowPreviewSize: 400
         property int trayMenuWidth: 300
         property int batteryWidth: 250
+        property int networkWidth: 280
         property int calendarWidth: 280
     }
 
