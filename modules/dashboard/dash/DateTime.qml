@@ -16,10 +16,13 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.topMargin: (root.height - (hours.implicitHeight + sep.implicitHeight + sep.anchors.topMargin + mins.implicitHeight + mins.anchors.topMargin + date.implicitHeight + date.anchors.topMargin)) / 2
+        anchors.topMargin: (root.height - (hours.implicitHeight + sep.implicitHeight + sep.anchors.topMargin + mins.implicitHeight + mins.anchors.topMargin + ampm.implicitHeight + ampm.anchors.topMargin + date.implicitHeight + date.anchors.topMargin)) / 2
 
         horizontalAlignment: Text.AlignHCenter
-        text: Time.format("HH")
+        text: {
+            let time = Time.format("h:mm AP");
+            return time.split(":")[0].padStart(2, '0');
+        }
         color: Colours.palette.m3secondary
         font.pointSize: Appearance.font.size.extraLarge
         font.weight: 500
@@ -55,11 +58,26 @@ Item {
     }
 
     StyledText {
-        id: date
+        id: ampm
 
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: mins.bottom
+        anchors.topMargin: Appearance.spacing.small
+
+        horizontalAlignment: Text.AlignHCenter
+        text: Time.format("AP")
+        color: Colours.palette.m3tertiary
+        font.pointSize: Appearance.font.size.small
+        font.weight: 500
+    }
+
+    StyledText {
+        id: date
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: ampm.bottom
         anchors.topMargin: Appearance.spacing.normal
 
         horizontalAlignment: Text.AlignHCenter
