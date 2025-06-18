@@ -12,28 +12,97 @@ Column {
     spacing: Appearance.spacing.normal
     width: Config.bar.sizes.batteryWidth
 
+    // Helper function to format time
+    function formatSeconds(s: int, fallback: string): string {
+        const day = Math.floor(s / 86400);
+        const hr = Math.floor(s / 3600) % 60;
+        const min = Math.floor(s / 60) % 60;
+
+        let comps = [];
+        if (day > 0)
+            comps.push(`${day} days`);
+        if (hr > 0)
+            comps.push(`${hr} hours`);
+        if (min > 0)
+            comps.push(`${min} mins`);
+
+        return comps.join(", ") || fallback;
+    }
+
+    // Overall battery status
     StyledText {
-        text: UPower.displayDevice.isLaptopBattery ? qsTr("Remaining: %1%").arg(Math.round(UPower.displayDevice.percentage * 100)) : qsTr("No battery detected")
+        text: UPower.displayDevice.isLaptopBattery ? qsTr("Overall: %1%").arg(Math.round(UPower.displayDevice.percentage * 100)) : qsTr("No battery detected")
+        font.weight: Font.Medium
     }
 
     StyledText {
-        function formatSeconds(s: int, fallback: string): string {
-            const day = Math.floor(s / 86400);
-            const hr = Math.floor(s / 3600) % 60;
-            const min = Math.floor(s / 60) % 60;
+        visible: UPower.displayDevice.isLaptopBattery
+        text: UPower.displayDevice.isLaptopBattery ? qsTr("Time %1: %2").arg(UPower.onBattery ? "remaining" : "until charged").arg(UPower.onBattery ? formatSeconds(UPower.displayDevice.timeToEmpty, "Calculating...") : formatSeconds(UPower.displayDevice.timeToFull, "Fully charged!")) : ""
+    }
 
-            let comps = [];
-            if (day > 0)
-                comps.push(`${day} days`);
-            if (hr > 0)
-                comps.push(`${hr} hours`);
-            if (min > 0)
-                comps.push(`${min} mins`);
+    // Separator when we have batteries
+    Rectangle {
+        visible: UPower.displayDevice.isLaptopBattery && batteryRepeater.count > 0
+        width: parent.width
+        height: 1
+        color: Colours.palette.m3outline
+        opacity: 0.3
+    }
 
-            return comps.join(", ") || fallback;
+    // Individual batteries
+    Repeater {
+        id: batteryRepeater
+        model: UPower.devices
+
+        delegate: Item {
+            required property var modelData
+            
+            width: parent.width
+            height: batteryInfo.visible ? batteryInfo.implicitHeight + Appearance.spacing.small : 0
+            
+            Column {
+                id: batteryInfo
+                
+                width: parent.width
+                visible: modelData.isLaptopBattery && modelData.percentage >= 0
+                spacing: Appearance.spacing.smaller
+                
+                StyledText {
+                    text: qsTr("Battery %1: %2%").arg(modelData.nativePath || "Unknown").arg(Math.round(modelData.percentage * 100))
+                    font.pointSize: Appearance.font.size.small
+                    color: modelData.percentage > 0.2 ? Colours.palette.m3onSurface : Colours.palette.m3error
+                }
+                
+                StyledText {
+                    visible: (modelData.vendor && modelData.vendor !== "") || (modelData.model && modelData.model !== "")
+                    text: {
+                        let info = "";
+                        if (modelData.vendor && modelData.vendor !== "") info += modelData.vendor;
+                        if (modelData.model && modelData.model !== "") {
+                            if (info !== "") info += " ";
+                            info += modelData.model;
+                        }
+                        return info;
+                    }
+                    font.pointSize: Appearance.font.size.smaller
+                    color: Colours.palette.m3onSurfaceVariant
+                }
+                
+                StyledText {
+                    visible: modelData.capacity >= 0 && modelData.capacity < 1
+                    text: qsTr("Health: %1%").arg(Math.round(modelData.capacity * 100))
+                    font.pointSize: Appearance.font.size.smaller
+                    color: modelData.capacity > 0.8 ? Colours.palette.m3onSurfaceVariant : 
+                           modelData.capacity > 0.6 ? Colours.palette.m3tertiary : Colours.palette.m3error
+                }
+            }
         }
+    }
 
-        text: UPower.displayDevice.isLaptopBattery ? qsTr("Time %1: %2").arg(UPower.onBattery ? "remaining" : "until charged").arg(UPower.onBattery ? formatSeconds(UPower.displayDevice.timeToEmpty, "Calculating...") : formatSeconds(UPower.displayDevice.timeToFull, "Fully charged!")) : qsTr("Power profile: %1").arg(PowerProfile.toString(PowerProfiles.profile))
+    // Power profile info when no batteries are detected
+    StyledText {
+        visible: !UPower.displayDevice.isLaptopBattery
+        text: qsTr("Power profile: %1").arg(PowerProfile.toString(PowerProfiles.profile))
     }
 
     Loader {
