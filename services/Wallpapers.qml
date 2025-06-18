@@ -1,6 +1,5 @@
 pragma Singleton
 
-import "root:/utils/scripts/fuzzysort.js" as Fuzzy
 import "root:/utils"
 import Quickshell
 import Quickshell.Io
@@ -19,20 +18,6 @@ Singleton {
     property string previewPath
     property string actualCurrent
 
-    readonly property list<var> preppedWalls: list.map(w => ({
-                name: Fuzzy.prepare(w.name),
-                path: Fuzzy.prepare(w.path),
-                wall: w
-            }))
-
-    function fuzzyQuery(search: string): var {
-        return Fuzzy.go(search, preppedWalls, {
-            all: true,
-            keys: ["name", "path"],
-            scoreFn: r => r[0].score * 0.9 + r[1].score * 0.1
-        }).map(r => r.obj.wall);
-    }
-
     function setWallpaper(path: string): void {
         actualCurrent = path;
         setWall.path = path;
@@ -42,7 +27,6 @@ Singleton {
     function preview(path: string): void {
         previewPath = path;
         showPreview = true;
-        getPreviewColoursProc.running = true;
     }
 
     function stopPreview(): void {
@@ -73,18 +57,6 @@ Singleton {
         watchChanges: true
         onFileChanged: reload()
         onLoaded: root.actualCurrent = text().trim()
-    }
-
-    Process {
-        id: getPreviewColoursProc
-
-        command: ["nekroshell", "wallpaper", "-p", root.previewPath]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                Colours.load(text, true);
-                Colours.showPreview = true;
-            }
-        }
     }
 
     Process {

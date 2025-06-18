@@ -294,7 +294,6 @@ NekroShell uses a sophisticated JSON-based configuration system:
 {
   "launcher": {
     "maxShown": 8,
-    "maxWallpapers": 9,
     "enableDangerousActions": false
   }
 }
@@ -385,10 +384,9 @@ NekroShell supports dynamic theming with Material Design 3:
 
 ### 🖼️ Wallpaper System
 
-- **Fuzzy Search**: Find wallpapers instantly
-- **Live Preview**: See changes in real-time
 - **Format Support**: JPG, PNG, WebP, TIFF
 - **Directory Watching**: Auto-detect new wallpapers
+- **Background Display**: Seamlessly integrated wallpaper rendering
 
 ### 🎭 Animation Curves
 

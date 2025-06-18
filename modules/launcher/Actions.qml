@@ -21,15 +21,6 @@ Singleton {
             }
         },
         Action {
-            name: qsTr("Wallpaper")
-            desc: qsTr("Change the current wallpaper")
-            icon: "image"
-
-            function onClicked(list: AppList): void {
-                root.autocomplete(list, "wallpaper");
-            }
-        },
-        Action {
             name: qsTr("Variant")
             desc: qsTr("Change the current scheme variant")
             icon: "colors"

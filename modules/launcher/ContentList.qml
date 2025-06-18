@@ -15,7 +15,6 @@ Item {
     required property int padding
     required property int rounding
 
-    property bool showWallpapers: false
     property var currentList: appList.item
 
     anchors.bottom: parent.bottom
