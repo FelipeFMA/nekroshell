@@ -248,6 +248,8 @@ Column {
         anchors.horizontalCenter: parent.horizontalCenter
         active: root.showPasswordDialog
         
+        height: active ? item ? item.implicitHeight : 0 : 0
+        
         sourceComponent: StyledRect {
             width: root.width
             implicitHeight: passwordContent.implicitHeight + Appearance.padding.normal * 2
@@ -283,8 +285,9 @@ Column {
                     
                     Keys.onReturnPressed: connectButton.clicked()
                     Keys.onEscapePressed: {
-                        root.showPasswordDialog = false;
                         text = "";
+                        root.selectedSSID = "";
+                        root.showPasswordDialog = false;
                     }
                     
                     Component.onCompleted: {
@@ -335,8 +338,9 @@ Column {
                             color: Colours.palette.m3onSurfaceVariant
 
                             function onClicked(): void {
-                                root.showPasswordDialog = false;
                                 passwordField.text = "";
+                                root.selectedSSID = "";
+                                root.showPasswordDialog = false;
                             }
                         }
                     }
@@ -350,8 +354,9 @@ Column {
 
                         function clicked() {
                             Network.connectToNetwork(root.selectedSSID, passwordField.text);
-                            root.showPasswordDialog = false;
                             passwordField.text = "";
+                            root.selectedSSID = "";
+                            root.showPasswordDialog = false;
                         }
 
                         StyledText {
