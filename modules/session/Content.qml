@@ -59,14 +59,50 @@ Column {
         source: "root:/assets/kurukuru.gif"
     }
 
-    SessionButton {
+    // Custom suspend button that locks screen first
+    StyledRect {
         id: suspend
 
-        icon: "bedtime"
-        command: ["systemctl", "suspend"]
+        implicitWidth: Config.session.sizes.button
+        implicitHeight: Config.session.sizes.button
+
+        radius: Appearance.rounding.large
+        color: suspend.activeFocus ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainer
 
         KeyNavigation.up: shutdown
         KeyNavigation.down: reboot
+
+        Keys.onEnterPressed: {
+            LockscreenService.lock();
+            suspendProcess.startDetached();
+        }
+        Keys.onReturnPressed: {
+            LockscreenService.lock();
+            suspendProcess.startDetached();
+        }
+        Keys.onEscapePressed: root.visibilities.session = false
+
+        Process {
+            id: suspendProcess
+            command: ["systemctl", "suspend"]
+        }
+
+        StateLayer {
+            radius: parent.radius
+
+            function onClicked(): void {
+                LockscreenService.lock();
+                suspendProcess.startDetached();
+            }
+        }
+
+        MaterialIcon {
+            anchors.centerIn: parent
+
+            text: "bedtime"
+            color: suspend.activeFocus ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
+            font.pointSize: Appearance.font.size.extraLarge
+        }
     }
 
     SessionButton {
