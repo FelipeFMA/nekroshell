@@ -251,7 +251,7 @@ Column {
         sourceComponent: StyledRect {
             width: root.width
             implicitHeight: passwordContent.implicitHeight + Appearance.padding.normal * 2
-            color: Colours.palette.m3surface
+            color: Colours.palette.m3surfaceContainerHigh
             radius: Appearance.rounding.normal
             border.width: 1
             border.color: Colours.palette.m3outline
@@ -274,7 +274,12 @@ Column {
                     width: parent.width
                     placeholderText: qsTr("Password")
                     echoMode: TextInput.Password
+                    passwordCharacter: "●"
+                    passwordMaskDelay: 0
                     selectByMouse: true
+                    
+                    // Override colors for better visibility in password mode
+                    color: Colours.palette.m3onSurface
                     
                     Keys.onReturnPressed: connectButton.clicked()
                     Keys.onEscapePressed: {

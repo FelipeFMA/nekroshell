@@ -220,6 +220,8 @@ Item {
                                 anchors.margins: Appearance.padding.normal
                                 
                                 echoMode: TextInput.Password
+                                passwordCharacter: "●"
+                                passwordMaskDelay: 0
                                 placeholderText: qsTr("Password")
                                 background: null
                                 color: Colours.palette.m3onSurface

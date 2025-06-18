@@ -12,6 +12,25 @@ TextField {
     placeholderTextColor: Colours.palette.m3outline
     font.family: Appearance.font.family.sans
     font.pointSize: Appearance.font.size.smaller
+    leftPadding: Appearance.padding.normal
+    rightPadding: Appearance.padding.normal
+    topPadding: Appearance.padding.small
+    bottomPadding: Appearance.padding.small
+
+    background: StyledRect {
+        color: Colours.palette.m3surfaceContainer
+        radius: Appearance.rounding.normal
+        border.width: root.activeFocus ? 2 : 1
+        border.color: root.activeFocus ? Colours.palette.m3primary : Colours.palette.m3outline
+
+        Behavior on border.color {
+            ColorAnimation {
+                duration: Appearance.anim.durations.normal
+                easing.type: Easing.BezierSpline
+                easing.bezierCurve: Appearance.anim.curves.standard
+            }
+        }
+    }
 
     cursorDelegate: StyledRect {
         id: cursor
