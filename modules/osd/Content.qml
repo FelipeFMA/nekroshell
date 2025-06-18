@@ -50,16 +50,22 @@ Column {
         implicitHeight: Config.osd.sizes.sliderWidth
 
         radius: Appearance.rounding.full
-        color: wlsunsetActive ? Colours.palette.m3primary : Colours.palette.m3surfaceContainer
-
-        property bool wlsunsetActive: false
+        color: NightLight.active ? Colours.palette.m3primary : Colours.palette.m3surfaceContainer
         
         StateLayer {
             radius: parent.radius
-            color: nightLightButton.wlsunsetActive ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+            color: NightLight.active ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
 
             function onClicked(): void {
-                toggleWlsunsetProc.startDetached();
+                NightLight.toggle();
+            }
+            
+            Behavior on color {
+                ColorAnimation {
+                    duration: Appearance.anim.durations.normal
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.anim.curves.standard
+                }
             }
         }
 
@@ -67,42 +73,16 @@ Column {
             anchors.centerIn: parent
 
             text: "bedtime"
-            color: nightLightButton.wlsunsetActive ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+            color: NightLight.active ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
             font.pointSize: Appearance.font.size.large
-        }
-
-        Process {
-            id: toggleWlsunsetProc
-
-            command: ["sh", "-c", `
-                if pkill -x wlsunset; then
-                    echo "wlsunset was running and has been killed."
-                else
-                    echo "wlsunset was not running. Starting wlsunset -t 4000 -T 4001..."
-                    wlsunset -t 4000 -T 4001 &
-                    echo "wlsunset started with PID $!"
-                fi
-            `]
-
-            onExited: {
-                // Check if wlsunset is running after the toggle
-                checkWlsunsetProc.startDetached();
-            }
-        }
-
-        Process {
-            id: checkWlsunsetProc
-
-            command: ["pgrep", "-x", "wlsunset"]
             
-            onExited: {
-                nightLightButton.wlsunsetActive = (exitCode === 0);
+            Behavior on color {
+                ColorAnimation {
+                    duration: Appearance.anim.durations.normal
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.anim.curves.standard
+                }
             }
-        }
-
-        Component.onCompleted: {
-            // Check initial state
-            checkWlsunsetProc.startDetached();
         }
 
         Behavior on color {
