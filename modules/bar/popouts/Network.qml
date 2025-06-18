@@ -295,6 +295,17 @@ Column {
                             });
                         }
                     }
+                    
+                    // Additional focus timer to ensure focus is gained
+                    Timer {
+                        interval: 100
+                        running: passwordField.visible
+                        onTriggered: {
+                            if (!passwordField.activeFocus) {
+                                passwordField.forceActiveFocus();
+                            }
+                        }
+                    }
                 }
 
                 Row {

@@ -21,15 +21,13 @@ Variants {
         Exclusions {
             screen: scope.modelData
             bar: bar
-        }
+        }            StyledWindow {
+                id: win
 
-        StyledWindow {
-            id: win
-
-            screen: scope.modelData
-            name: "drawers"
-            WlrLayershell.exclusionMode: ExclusionMode.Ignore
-            WlrLayershell.keyboardFocus: visibilities.launcher || visibilities.session ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+                screen: scope.modelData
+                name: "drawers"
+                WlrLayershell.exclusionMode: ExclusionMode.Ignore
+                WlrLayershell.keyboardFocus: visibilities.launcher || visibilities.session || panels.popouts.hasCurrent ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
             mask: Region {
                 x: bar.implicitWidth
