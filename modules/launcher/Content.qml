@@ -74,21 +74,14 @@ Item {
             topPadding: Appearance.padding.larger
             bottomPadding: Appearance.padding.larger
 
-            placeholderText: qsTr("Type \"%1\" for commands").arg(Config.launcher.actionPrefix)
+            placeholderText: qsTr("Search applications...")
             background: null
 
             onAccepted: {
                 const currentItem = list.currentList?.currentItem;
                 if (currentItem) {
-                    if (list.showWallpapers) {
-                        Wallpapers.setWallpaper(currentItem.modelData.path);
-                        root.visibilities.launcher = false;
-                    } else if (text.startsWith(Config.launcher.actionPrefix)) {
-                        currentItem.modelData.onClicked(list.currentList);
-                    } else {
-                        Apps.launch(currentItem.modelData);
-                        root.visibilities.launcher = false;
-                    }
+                    Apps.launch(currentItem.modelData);
+                    root.visibilities.launcher = false;
                 }
             }
 

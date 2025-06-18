@@ -15,81 +15,22 @@ Item {
     required property int padding
     required property int rounding
 
-    property bool showWallpapers: search.text.startsWith(`${Config.launcher.actionPrefix}wallpaper `)
-    property var currentList: (showWallpapers ? wallpaperList : appList).item
+    property bool showWallpapers: false
+    property var currentList: appList.item
 
-    anchors.horizontalCenter: parent.horizontalCenter
     anchors.bottom: parent.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
 
     clip: true
-    state: showWallpapers ? "wallpapers" : "apps"
 
-    states: [
-        State {
-            name: "apps"
-
-            PropertyChanges {
-                root.implicitWidth: Config.launcher.sizes.itemWidth
-                root.implicitHeight: Math.max(empty.height, appList.height)
-                appList.active: true
-            }
-
-            AnchorChanges {
-                anchors.left: root.parent.left
-                anchors.right: root.parent.right
-            }
-        },
-        State {
-            name: "wallpapers"
-
-            PropertyChanges {
-                root.implicitWidth: Math.max(Config.launcher.sizes.itemWidth, wallpaperList.width)
-                root.implicitHeight: Config.launcher.sizes.wallpaperHeight
-                wallpaperList.active: true
-            }
-        }
-    ]
-
-    transitions: Transition {
-        SequentialAnimation {
-            NumberAnimation {
-                target: root
-                property: "opacity"
-                from: 1
-                to: 0
-                duration: Appearance.anim.durations.small
-                easing.type: Easing.BezierSpline
-                easing.bezierCurve: Appearance.anim.curves.standard
-            }
-            PropertyAction {
-                targets: [appList, wallpaperList]
-                properties: "active"
-            }
-            ParallelAnimation {
-                NumberAnimation {
-                    target: root
-                    properties: "implicitWidth,implicitHeight"
-                    duration: Appearance.anim.durations.large
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.emphasized
-                }
-                NumberAnimation {
-                    target: root
-                    property: "opacity"
-                    from: 0
-                    to: 1
-                    duration: Appearance.anim.durations.large
-                    easing.type: Easing.BezierSpline
-                    easing.bezierCurve: Appearance.anim.curves.standard
-                }
-            }
-        }
-    }
+    implicitWidth: Config.launcher.sizes.itemWidth
+    implicitHeight: Math.max(empty.height, appList.height)
 
     Loader {
         id: appList
 
-        active: false
+        active: true
         asynchronous: true
 
         anchors.left: parent.left
@@ -97,22 +38,6 @@ Item {
 
         sourceComponent: AppList {
             padding: root.padding
-            search: root.search
-            visibilities: root.visibilities
-        }
-    }
-
-    Loader {
-        id: wallpaperList
-
-        active: false
-        asynchronous: true
-
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-
-        sourceComponent: WallpaperList {
             search: root.search
             visibilities: root.visibilities
         }

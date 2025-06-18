@@ -295,7 +295,6 @@ NekroShell uses a sophisticated JSON-based configuration system:
   "launcher": {
     "maxShown": 8,
     "maxWallpapers": 9,
-    "actionPrefix": ">",
     "enableDangerousActions": false
   }
 }
@@ -361,16 +360,6 @@ NekroShell responds to these D-Bus global shortcut identifiers:
 | `nekroshell:lock` | Lock Screen | Activate screen lock |
 | `nekroshell:showAll` | Show All Panels | Toggle visibility of all panels |
 | `nekroshell:nightLight` | Night Light | Toggle night light mode |
-
-### 🎯 Launcher Actions
-
-Access powerful actions by typing `>` in the launcher:
-
-- `>scheme` - Change color scheme
-- `>wallpaper` - Browse wallpapers
-- `>variant` - Switch theme variant
-- `>transparency` - Adjust transparency
-- `>light` / `>dark` - Switch theme mode
 
 ### 🖱️ Mouse Interactions
 
