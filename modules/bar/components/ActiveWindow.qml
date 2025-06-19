@@ -10,7 +10,7 @@ Item {
     id: root
 
     required property Brightness.Monitor monitor
-    property color colour: "#ebdbb2"
+    property color colour: Colours.palette.m3primary
     readonly property Item child: child
 
     implicitWidth: child.implicitWidth

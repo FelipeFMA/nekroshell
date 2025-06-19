@@ -433,7 +433,7 @@ StyledRect {
                 let match;
                 while ((match = htmlLinkRegex.exec(content)) !== null) {
                     if (match[1] && match[2]) {
-                        links.push(`<a href="${match[1]}" style="color: #FBF1C7;">${match[2]}</a>`);
+                        links.push(`<a href="${match[1]}" style="color: #ffffff;">${match[2]}</a>`);
                         textWithoutLinks = textWithoutLinks.replace(match[0], '');
                     }
                 }
@@ -442,7 +442,7 @@ StyledRect {
                 const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
                 while ((match = markdownLinkRegex.exec(textWithoutLinks)) !== null) {
                     if (match[1] && match[2]) {
-                        links.push(`<a href="${match[2]}" style="color: #FBF1C7;">${match[1]}</a>`);
+                        links.push(`<a href="${match[2]}" style="color: #ffffff;">${match[1]}</a>`);
                         textWithoutLinks = textWithoutLinks.replace(match[0], '');
                     }
                 }
@@ -598,7 +598,7 @@ StyledRect {
                 textWithoutLinks = textWithoutLinks.replace(/\s+/g, ' ').trim();
                 
                 // Combine text with links at the end
-                let result = '<style>a { color: #FBF1C7; }</style>';
+                let result = '<style>a { color: #ffffff; }</style>';
                 if (textWithoutLinks) {
                     result += textWithoutLinks;
                 }

@@ -14,7 +14,7 @@ Variants {
         name: "background"
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Background
-        color: "black"
+        color: "#1b1b1b"
 
         anchors.top: true
         anchors.bottom: true

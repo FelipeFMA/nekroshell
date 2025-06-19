@@ -46,14 +46,14 @@ StyledRect {
     implicitWidth: Config.bar.sizes.innerHeight - 2
     implicitHeight: size - 2
     radius: Config.bar.workspaces.rounded ? Appearance.rounding.full : 0
-    color: "#ebdbb2"
+    color: Colours.palette.m3primary
 
     StyledRect {
         id: base
 
         visible: false
         anchors.fill: parent
-        color: "#1d2021"
+        color: Colours.palette.m3onPrimary
     }
 
     MultiEffect {

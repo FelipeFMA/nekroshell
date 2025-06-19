@@ -16,7 +16,7 @@ Variants {
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Overlay
         WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-        color: "black"
+        color: "#1b1b1b"
 
         anchors.top: true
         anchors.bottom: true

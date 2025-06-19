@@ -7,5 +7,5 @@ StyledText {
     text: Icons.osIcon
     font.pointSize: Appearance.font.size.smaller
     font.family: Appearance.font.family.mono
-    color: "#ebdbb2"
+    color: Colours.palette.m3primary
 }
