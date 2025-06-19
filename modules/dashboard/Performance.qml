@@ -68,9 +68,9 @@ Row {
         readonly property real thickness: Config.dashboard.sizes.resourceProgessThickness * primaryMult
 
         property color fg1: Colours.palette.m3primary
-        property color fg2: Colours.palette.m3secondary
+        property color fg2: Colours.palette.m3outline
         property color bg1: Colours.palette.m3primaryContainer
-        property color bg2: Colours.palette.m3secondaryContainer
+        property color bg2: Colours.palette.m3surfaceContainerLowest
 
         anchors.verticalCenter: parent.verticalCenter
 
