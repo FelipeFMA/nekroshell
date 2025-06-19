@@ -12,6 +12,7 @@ Column {
     padding: Appearance.padding.large
     spacing: Appearance.spacing.small
     width: Config.bar.sizes.calendarWidth
+    height: Config.bar.sizes.calendarHeight // Fixed configurable height
 
     DayOfWeekRow {
         id: days
@@ -19,6 +20,8 @@ Column {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: parent.padding
+        
+        height: 30 // Fixed height for day headers
 
         delegate: StyledText {
             required property var model
@@ -36,6 +39,8 @@ Column {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: parent.padding
+        
+        height: parent.height - days.height - parent.spacing - parent.padding * 2 // Fill remaining space
 
         spacing: 3
         locale: Qt.locale()
@@ -47,14 +52,14 @@ Column {
 
             required property var model
 
-            implicitWidth: implicitHeight
-            implicitHeight: text.implicitHeight + Appearance.padding.small * 2
+            width: (grid.width - grid.spacing * 6) / 7 // Fixed width for 7 columns
+            height: (grid.height - grid.spacing * 5) / 6 // Fixed height for 6 rows
 
             StyledRect {
                 anchors.centerIn: parent
 
-                implicitWidth: parent.implicitHeight
-                implicitHeight: parent.implicitHeight
+                width: Math.min(parent.width, parent.height) - 4 // Fixed size with margin
+                height: width
 
                 radius: Appearance.rounding.full
                 color: {

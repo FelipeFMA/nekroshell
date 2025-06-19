@@ -7,7 +7,8 @@ JsonObject {
         property int trayMenuWidth: 300
         property int batteryWidth: 250
         property int networkWidth: 280
-        property int calendarWidth: 280
+        property int calendarWidth: 250
+        property int calendarHeight: 250
     }
 
     property JsonObject workspaces: JsonObject {
