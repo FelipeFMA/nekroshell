@@ -24,7 +24,7 @@ Item {
         id: network
 
         animate: true
-        text: Network.active ? Icons.getNetworkIcon(Network.active.strength ?? 0) : "wifi_off"
+        text: Network.wifiEnabled ? (Network.active ? Icons.getNetworkIcon(Network.active.strength ?? 0) : "signal_wifi_off") : "signal_wifi_off"
         color: root.colour
 
         anchors.horizontalCenter: parent.horizontalCenter

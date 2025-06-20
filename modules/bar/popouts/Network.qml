@@ -47,7 +47,7 @@ Column {
 
             MaterialIcon {
                 anchors.verticalCenter: parent.verticalCenter
-                text: Network.wifiEnabled ? "wifi" : "wifi_off"
+                text: Network.wifiEnabled ? Icons.getNetworkIcon(100) : "signal_wifi_off"
                 color: Network.wifiEnabled ? Colours.palette.m3primary : Colours.palette.m3outline
                 font.pointSize: Appearance.font.size.normal
             }
@@ -131,7 +131,7 @@ Column {
 
                 MaterialIcon {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: !Network.wifiEnabled ? "wifi_off" : (Network.active ? Icons.getNetworkIcon(Network.active.strength ?? 0) : "wifi_off")
+                    text: !Network.wifiEnabled ? "signal_wifi_off" : (Network.active ? Icons.getNetworkIcon(Network.active.strength ?? 0) : "signal_wifi_off")
                     color: !Network.wifiEnabled ? Colours.palette.m3outline : (Network.active ? Colours.palette.m3primary : Colours.palette.m3outline)
                 }
 
