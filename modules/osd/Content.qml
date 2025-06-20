@@ -73,8 +73,17 @@ Column {
             anchors.centerIn: parent
 
             text: "bedtime"
+            fill: NightLight.active ? 1 : 0
             color: NightLight.active ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
             font.pointSize: Appearance.font.size.large
+            
+            Behavior on fill {
+                NumberAnimation {
+                    duration: Appearance.anim.durations.normal
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Appearance.anim.curves.standard
+                }
+            }
             
             Behavior on color {
                 ColorAnimation {
