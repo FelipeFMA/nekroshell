@@ -133,4 +133,28 @@ Slider {
             easing.bezierCurve: Appearance.anim.curves.standard
         }
     }
+
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        acceptedButtons: Qt.AllButtons
+        propagateComposedEvents: true
+        cursorShape: Qt.PointingHandCursor
+        onWheel: event => {
+            // Step size for each scroll
+            const step = 0.05;
+            if (event.angleDelta.y !== 0) {
+                let newValue = root.value + (event.angleDelta.y > 0 ? step : -step);
+                newValue = Math.max(root.from, Math.min(root.to, newValue));
+                if (newValue !== root.value) {
+                    root.value = newValue;
+                    if (root.moved) {
+                        root.moved(); // Call with no arguments
+                    }
+                }
+            }
+        }
+        // Allow normal slider interaction
+        onPressed: event => event.accepted = false
+    }
 }
