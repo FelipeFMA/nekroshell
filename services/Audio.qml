@@ -21,13 +21,13 @@ Singleton {
     }
 
     function increaseVolume(): void {
-        const newVolume = Math.min(1.0, volume + 0.1);
+        const newVolume = Math.min(1.0, volume + 0.05); // 5% step
         setVolume(newVolume);
         showOsd();
     }
 
     function decreaseVolume(): void {
-        const newVolume = Math.max(0.0, volume - 0.1);
+        const newVolume = Math.max(0.0, volume - 0.05); // 5% step
         setVolume(newVolume);
         showOsd();
     }
