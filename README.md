@@ -28,7 +28,7 @@
 - **🎯 Smart Launcher**: Fuzzy search with application and action support
 - **📊 Live Dashboard**: Real-time system monitoring with beautiful visualizations
 - **🔔 Modern Notifications**: Elegant notification system with popup management
-- **⚙️ Quick Settings**: OSD controls for volume, brightness, and system settings
+- **⚙️ Quick Settings**: OSD controls for volume, brightness, and system settings with instant feedback
 - **🔐 Secure Lockscreen**: Advanced authentication system with PAM integration
 - **🎭 Session Manager**: Secure logout, shutdown, and system control
 
@@ -52,6 +52,7 @@
 
 - **🚀 Native Performance**: Built on Qt/QML for optimal speed
 - **🔗 Universal Compatibility**: Works with any tiling window manager
+- **⚡ Optimized OSD**: Instant feedback system for brightness and volume controls
 - **🎛️ Advanced Configuration**: JSON-based config with live reloading
 - **🖥️ Multi-Monitor Support**: Perfect scaling across multiple displays
 - **🎵 Media Control**: MPRIS integration with Spotify optimization
@@ -146,9 +147,9 @@ The shell operates through a sophisticated service layer:
 |---------|---------|--------------|
 | 🖥️ **Hyprland** | Window manager integration | Real-time workspace tracking, client management |
 | 🎵 **Players** | Media control | MPRIS integration, Spotify optimization |
-| 🔊 **Audio** | Sound management | PipeWire integration, volume control |
+| 🔊 **Audio** | Sound management | PipeWire integration, instant OSD feedback |
 | 🌐 **Network** | Connectivity | NetworkManager integration, Wi-Fi management |
-| 🔋 **Brightness** | Display control | DDC/CI support, multi-monitor brightness |
+| 🔋 **Brightness** | Display control | DDC/CI support, optimized OSD integration |
 | 📊 **SystemUsage** | Performance monitoring | CPU, memory, storage tracking |
 | 🖼️ **Wallpapers** | Background management | Fuzzy search, preview system |
 | 🔔 **Notifications** | Message system | D-Bus notification server |
@@ -342,6 +343,13 @@ bind = $mainMod SHIFT, Q, global, nekroshell:session   # Toggle session menu
 bind = $mainMod, L, global, nekroshell:lock           # Lock screen
 bind = $mainMod, A, global, nekroshell:showAll        # Toggle all panels
 bind = $mainMod, K, global, nekroshell:nightLight     # Toggle night light
+
+# System control shortcuts with instant OSD feedback
+bind = , XF86AudioRaiseVolume, global, nekroshell:volumeUp      # Volume up + show OSD
+bind = , XF86AudioLowerVolume, global, nekroshell:volumeDown    # Volume down + show OSD
+bind = , XF86AudioMute, global, nekroshell:volumeMute           # Toggle mute + show OSD
+bind = , XF86MonBrightnessUp, global, nekroshell:brightnessUp   # Brightness up + show OSD
+bind = , XF86MonBrightnessDown, global, nekroshell:brightnessDown # Brightness down + show OSD
 ```
 
 **🪟 Other Window Managers**:
@@ -359,6 +367,11 @@ NekroShell responds to these D-Bus global shortcut identifiers:
 | `nekroshell:lock` | Lock Screen | Activate screen lock |
 | `nekroshell:showAll` | Show All Panels | Toggle visibility of all panels |
 | `nekroshell:nightLight` | Night Light | Toggle night light mode |
+| `nekroshell:volumeUp` | Volume Up | Increase volume and show OSD |
+| `nekroshell:volumeDown` | Volume Down | Decrease volume and show OSD |
+| `nekroshell:volumeMute` | Mute Toggle | Toggle mute and show OSD |
+| `nekroshell:brightnessUp` | Brightness Up | Increase brightness and show OSD |
+| `nekroshell:brightnessDown` | Brightness Down | Decrease brightness and show OSD |
 
 ### 🖱️ Mouse Interactions
 

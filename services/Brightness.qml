@@ -19,15 +19,26 @@ Singleton {
     function increaseBrightness(): void {
         const focusedName = Hyprland.focusedMonitor.name;
         const monitor = monitors.find(m => focusedName === m.modelData.name);
-        if (monitor)
+        if (monitor) {
             monitor.setBrightness(monitor.brightness + 0.1);
+            showOsdForScreen(monitor.modelData);
+        }
     }
 
     function decreaseBrightness(): void {
         const focusedName = Hyprland.focusedMonitor.name;
         const monitor = monitors.find(m => focusedName === m.modelData.name);
-        if (monitor)
+        if (monitor) {
             monitor.setBrightness(monitor.brightness - 0.1);
+            showOsdForScreen(monitor.modelData);
+        }
+    }
+
+    function showOsdForScreen(screen: ShellScreen): void {
+        const visibilities = Visibilities.getForActive();
+        if (visibilities) {
+            visibilities.osd = true;
+        }
     }
 
     reloadableId: "brightness"
@@ -63,11 +74,13 @@ Singleton {
 
     CustomShortcut {
         name: "brightnessUp"
+        description: "Increase brightness and show OSD"
         onPressed: root.increaseBrightness()
     }
 
     CustomShortcut {
         name: "brightnessDown"
+        description: "Decrease brightness and show OSD"
         onPressed: root.decreaseBrightness()
     }
 
