@@ -47,9 +47,9 @@ Scope {
 
     CustomShortcut {
         name: "nightLight"
-        description: "Toggle night light (wlsunset)"
+        description: "Toggle night light (wlsunset) and show OSD"
         onPressed: {
-            nightLightProc.startDetached();
+            NightLight.toggle();
         }
     }
 
@@ -57,20 +57,6 @@ Scope {
         name: "lock"
         description: "Lock the session"
         onPressed: LockscreenService.lock()
-    }
-
-    Process {
-        id: nightLightProc
-
-        command: ["sh", "-c", `
-            if pkill -x wlsunset; then
-                echo "wlsunset was running and has been killed."
-            else
-                echo "wlsunset was not running. Starting wlsunset -t 4000 -T 4001..."
-                wlsunset -t 4000 -T 4001 &
-                echo "wlsunset started with PID $!"
-            fi
-        `]
     }
 
     IpcHandler {

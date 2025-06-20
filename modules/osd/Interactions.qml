@@ -36,6 +36,14 @@ Scope {
         }
     }
 
+    Connections {
+        target: NightLight
+
+        function onActiveChanged(): void {
+            root.show();
+        }
+    }
+
     Timer {
         id: timer
 
