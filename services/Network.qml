@@ -12,11 +12,20 @@ Singleton {
     
     property bool connectionInProgress: false
     property string connectionResult: ""
+    property bool wifiEnabled: true
 
     reloadableId: "network"
 
     function refreshNetworks() {
         getNetworks.running = true;
+    }
+
+    function setWifiEnabled(enabled) {
+        console.log("WiFi setEnabled called:", enabled);
+        wifiToggleProcess.command = ["nmcli", "radio", "wifi", enabled ? "on" : "off"];
+        wifiToggleProcess.running = true;
+        // Add a short delay before checking status
+        Qt.createQmlObject('import QtQuick 2.0; Timer { interval: 500; repeat: false; onTriggered: getRadioStatus.running = true; }', root, 'WifiStatusDelay').start();
     }
 
     function connectToNetwork(ssid, password = "") {
@@ -96,6 +105,40 @@ Singleton {
     }
 
     Process {
+        id: wifiToggleProcess
+        running: false
+        stdout: SplitParser {
+            onRead: {
+                console.log("WiFi toggle result:", text);
+                getRadioStatus.running = true; // Check new radio status
+            }
+        }
+        stderr: SplitParser {
+            onRead: {
+                console.log("WiFi toggle error:", text);
+                getRadioStatus.running = true; // Check radio status anyway
+            }
+        }
+    }
+
+    Process {
+        id: getRadioStatus
+        running: true
+        command: ["nmcli", "radio", "wifi"]
+        stdout: SplitParser {
+            onRead: {
+                var raw = typeof line !== "undefined" ? line
+                        : typeof text !== "undefined" ? text
+                        : typeof data !== "undefined" ? data
+                        : typeof output !== "undefined" ? output
+                        : "";
+                const status = raw.trim().toLowerCase();
+                root.wifiEnabled = status === "enabled";
+            }
+        }
+    }
+
+    Process {
         running: true
         command: ["nmcli", "m"]
         stdout: SplitParser {
@@ -159,5 +202,9 @@ Singleton {
         id: apComp
 
         AccessPoint {}
+    }
+
+    Component.onCompleted: {
+        getRadioStatus.running = true;
     }
 }

@@ -33,6 +33,86 @@ Column {
         }
     }
 
+    // WiFi Power Toggle
+    StyledRect {
+        width: parent.width
+        implicitHeight: wifiPowerToggle.implicitHeight + Appearance.padding.normal * 2
+        color: Colours.palette.m3surfaceContainer
+        radius: Appearance.rounding.normal
+
+        Row {
+            id: wifiPowerToggle
+            anchors.centerIn: parent
+            spacing: Appearance.spacing.normal
+
+            MaterialIcon {
+                anchors.verticalCenter: parent.verticalCenter
+                text: Network.wifiEnabled ? "wifi" : "wifi_off"
+                color: Network.wifiEnabled ? Colours.palette.m3primary : Colours.palette.m3outline
+                font.pointSize: Appearance.font.size.normal
+            }
+
+            Column {
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 2
+
+                StyledText {
+                    text: qsTr("WiFi")
+                    font.weight: 600
+                    color: Colours.palette.m3onSurface
+                }
+
+                StyledText {
+                    text: Network.wifiEnabled ? qsTr("Enabled") : qsTr("Disabled")
+                    color: Colours.palette.m3onSurfaceVariant
+                    font.pointSize: Appearance.font.size.small
+                }
+            }
+
+            Item {
+                // Spacer
+                width: Math.max(0, root.width - wifiPowerToggle.children[0].implicitWidth - wifiPowerToggle.children[1].implicitWidth - wifiToggleSwitch.implicitWidth - wifiPowerToggle.spacing * 3 - Appearance.padding.normal * 6)
+                height: 1
+            }
+
+            // Toggle Switch
+            StyledRect {
+                id: wifiToggleSwitch
+                anchors.verticalCenter: parent.verticalCenter
+                width: 48
+                height: 24
+                radius: 12
+                color: Network.wifiEnabled ? Colours.palette.m3primary : Colours.palette.m3outline
+
+                StyledRect {
+                    id: wifiToggleHandle
+                    width: 20
+                    height: 20
+                    radius: 10
+                    color: Network.wifiEnabled ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
+                    anchors.verticalCenter: parent.verticalCenter
+                    
+                    Behavior on x {
+                        NumberAnimation { duration: 150 }
+                    }
+                    
+                    x: Network.wifiEnabled ? parent.width - width - 2 : 2
+                }
+
+                StateLayer {
+                    anchors.fill: parent
+                    radius: parent.radius
+                    color: Colours.palette.m3onSurface
+
+                    function onClicked(): void {
+                        console.log("WiFi toggle clicked, current state:", Network.wifiEnabled);
+                        Network.setWifiEnabled(!Network.wifiEnabled);
+                    }
+                }
+            }
+        }
+    }
+
     // Current connection status
     StyledRect {
         width: parent.width
@@ -51,24 +131,24 @@ Column {
 
                 MaterialIcon {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: Network.active ? Icons.getNetworkIcon(Network.active.strength ?? 0) : "wifi_off"
-                    color: Network.active ? Colours.palette.m3primary : Colours.palette.m3outline
+                    text: !Network.wifiEnabled ? "wifi_off" : (Network.active ? Icons.getNetworkIcon(Network.active.strength ?? 0) : "wifi_off")
+                    color: !Network.wifiEnabled ? Colours.palette.m3outline : (Network.active ? Colours.palette.m3primary : Colours.palette.m3outline)
                 }
 
                 StyledText {
                     anchors.verticalCenter: parent.verticalCenter
-                    text: Network.active ? Network.active.ssid : qsTr("Not Connected")
+                    text: !Network.wifiEnabled ? qsTr("WiFi Disabled") : (Network.active ? Network.active.ssid : qsTr("Not Connected"))
                     font.weight: 600
-                    color: Network.active ? Colours.palette.m3onSurface : Colours.palette.m3outline
+                    color: !Network.wifiEnabled ? Colours.palette.m3outline : (Network.active ? Colours.palette.m3onSurface : Colours.palette.m3outline)
                 }
             }
 
             StyledText {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: Network.active ? qsTr("Signal: %1%").arg(Network.active.strength) : qsTr("No active connection")
+                text: !Network.wifiEnabled ? qsTr("Enable WiFi to see networks") : (Network.active ? qsTr("Signal: %1%").arg(Network.active.strength) : qsTr("No active connection"))
                 color: Colours.palette.m3onSurfaceVariant
                 font.pointSize: Appearance.font.size.small
-                visible: Network.active
+                visible: !Network.wifiEnabled || Network.active
             }
 
             // Disconnect button
@@ -107,6 +187,7 @@ Column {
     Row {
         width: parent.width
         spacing: Appearance.spacing.normal
+        visible: Network.wifiEnabled
 
         StyledText {
             anchors.verticalCenter: parent.verticalCenter
@@ -154,6 +235,7 @@ Column {
         implicitHeight: Math.min(networksList.contentHeight + Appearance.padding.normal * 2, 300)
         color: Colours.palette.m3surfaceContainer
         radius: Appearance.rounding.normal
+        visible: Network.wifiEnabled
 
         ListView {
             id: networksList
@@ -246,7 +328,7 @@ Column {
     // Password Dialog
     Loader {
         anchors.horizontalCenter: parent.horizontalCenter
-        active: root.showPasswordDialog
+        active: root.showPasswordDialog && Network.wifiEnabled
         
         height: active ? item ? item.implicitHeight : 0 : 0
         
