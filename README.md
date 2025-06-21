@@ -12,6 +12,7 @@
 **A revolutionary desktop shell that delivers a universal, elegant experience across any tiling window manager with unmatched performance and aesthetic excellence.**
 
 <img src="preview/preview.gif" alt="NekroShell Preview" width="800" style="border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);" />
+TODO: update the preview
 
 *🎯 Seamless • 🎨 Beautiful • ⚡ Fast*
 
