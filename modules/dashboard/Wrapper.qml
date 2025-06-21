@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import "root:/config"
+import "root:/services"
 
 Item {
     id: root
@@ -46,6 +47,16 @@ Item {
             }
         }
     ]
+
+    Component.onCompleted: {
+        SystemUsage.dashboardVisible = root.visibilities.dashboard;
+    }
+    onVisibleChanged: {
+        SystemUsage.dashboardVisible = root.visibilities.dashboard;
+    }
+    onVisibilitiesChanged: {
+        SystemUsage.dashboardVisible = root.visibilities.dashboard;
+    }
 
     Content {
         id: content

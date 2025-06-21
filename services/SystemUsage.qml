@@ -22,6 +22,9 @@ Singleton {
     property int lastCpuIdle
     property int lastCpuTotal
 
+    // Add a property to control monitoring externally
+    property bool dashboardVisible: false
+
     function formatKib(kib: int): var {
         const mib = 1024;
         const gib = 1024 ** 2;
@@ -49,8 +52,8 @@ Singleton {
     }
 
     Timer {
-        running: Config.dashboard.enableSystemMonitoring
-        interval: 3000
+        running: Config.dashboard.enableSystemMonitoring && root.dashboardVisible
+        interval: 1000 // update every second
         repeat: true
         onTriggered: {
             stat.reload();
