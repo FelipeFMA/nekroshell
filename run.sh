@@ -1,5 +1,38 @@
 #!/bin/sh
 
+if [ "$1" != "--ignore" ]; then
+    # Check for Arch Linux
+    if [ ! -f /etc/os-release ] || ! grep -q '^ID=arch' /etc/os-release; then
+        echo "Error: This script is intended for Arch Linux."
+        echo "Use --ignore to run anyway."
+        exit 1
+    fi
+
+    # Check for Hyprland
+    if [ -z "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+        echo "Error: This script is intended to be run inside a Hyprland session."
+        echo "Use --ignore to run anyway."
+        exit 1
+    fi
+
+    # Check for necessary packages
+    packages="quickshell networkmanager bluez bluez-utils apple-fonts ttf-material-symbols-variable-git"
+    missing_packages=""
+
+    for pkg in $packages; do
+        if ! pacman -Q "$pkg" >/dev/null 2>&1; then
+            missing_packages="$missing_packages $pkg"
+        fi
+    done
+
+    if [ -n "$missing_packages" ]; then
+        echo "Error: The following packages are not installed:"
+        echo "$missing_packages"
+        echo "Please install them using an AUR helper. If you know what you are doing, use --ignore to run anyway."
+        exit 1
+    fi
+fi
+
 pkill -f quickshell
 sleep 0.2
 
