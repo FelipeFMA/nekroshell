@@ -38,4 +38,6 @@ cache="Cannot open: file://${XDG_CACHE_HOME:-$HOME/.cache}/nekroshell/imagecache
 # Get the directory of the current script
 script_dir="$(dirname "$0")"
 
+export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share:${XDG_DATA_DIRS:-/usr/local/share/:/usr/share/}"
+
 qs -p "$script_dir" --log-rules "$dbus;$notifs;$sni" | grep -vF -e "$process" -e "$cache"
