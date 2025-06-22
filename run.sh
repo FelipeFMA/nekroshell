@@ -16,7 +16,7 @@ if [ "$1" != "--ignore" ]; then
     fi
 
     # Check for necessary packages
-    packages="quickshell networkmanager bluez bluez-utils apple-fonts ttf-material-symbols-variable-git"
+    packages="quickshell networkmanager bluez bluez-utils qt6-multimedia qt6-svg pipewire brightnessctl cava pam wlsunset apple-fonts ttf-material-symbols-variable-git"
     missing_packages=""
 
     for pkg in $packages; do
