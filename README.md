@@ -12,7 +12,7 @@
 
 ## About
 
-Nekroshell is a highly customizable and feature-rich shell for Linux, built on top of **[quickshell](https://github.com/quickshell/quickshell)**. It is a fork of the beautiful **[caelestia-shell](https://github.com/felipe-develop/caelestia-shell)**, with numerous enhancements and new features.
+Nekroshell is a highly customizable and feature-rich shell for Linux, built on top of **[quickshell](https://quickshell.outfoxxed.me)**. It is a fork of the beautiful **[caelestia-shell](https://github.com/caelestia-dots/shell)**, with numerous enhancements and new features.
 
 This project is currently in **beta**, and while it is usable, some features may be incomplete or buggy. It is designed to work on **Arch Linux with Hyprland**, but we plan to expand compatibility to other distributions and window managers in the future.
 
