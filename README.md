@@ -174,21 +174,20 @@ The shell operates through a sophisticated service layer:
 
 **Required Dependencies:**
 ```bash
-# Essential
-quickshell     # The shell framework
-qt6-multimedia # Qt6 multimedia support
-qt6-svg        # SVG rendering
-
-# System Integration
-pipewire       # Audio system
-networkmanager # Network management
-brightnessctl  # Brightness control (or ddcutil)
-cava          # Audio visualizer
-pam            # Authentication system (for lockscreen)
-
-# Optional but Recommended
-hyprland      # Optimized window manager
-fish          # Shell for scripts
+quickshell                          # The shell framework
+networkmanager                      # Network management
+bluez                               # Bluetooth stack
+bluez-utils                         # Bluetooth utilities
+qt6-multimedia                      # Qt6 multimedia support
+qt6-svg                             # SVG rendering
+pipewire                            # Audio system
+brightnessctl                       # Brightness control (or ddcutil)
+cava                                # Audio visualizer
+pam                                 # Authentication system (for lockscreen)
+wlsunset                            # Night light (optional, for color temperature)
+apple-fonts                         # Apple fonts (optional, for UI)
+ttf-material-symbols-variable-git   # Material Symbols font (for icons)
+hyprland                            # Hyprland window manager
 ```
 
 ### 🔧 Quick Install
