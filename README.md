@@ -161,17 +161,6 @@ The shell operates through a sophisticated service layer:
 
 ## 🚀 Installation & Setup
 
-### 📋 Prerequisites
-
-<div align="center">
-
-![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)
-![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
-![Fedora](https://img.shields.io/badge/Fedora-294172?style=for-the-badge&logo=fedora&logoColor=white)
-![openSUSE](https://img.shields.io/badge/openSUSE-73BA25?style=for-the-badge&logo=openSUSE&logoColor=white)
-
-</div>
-
 **Required Dependencies:**
 ```bash
 quickshell                          # The shell framework
