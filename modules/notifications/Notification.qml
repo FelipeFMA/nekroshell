@@ -18,7 +18,9 @@ StyledRect {
     readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? appName.height + body.height + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
     property bool expanded
 
-    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainer
+    color: Colours.palette.m3surfaceContainer
+    borderWidth: root.modelData.urgency === NotificationUrgency.Critical ? 2 : 0
+    borderColor: Colours.palette.m3error
     radius: Appearance.rounding.normal
     implicitWidth: Config.notifs.sizes.width
     implicitHeight: inner.implicitHeight
@@ -139,7 +141,7 @@ StyledRect {
 
             sourceComponent: StyledRect {
                 radius: Appearance.rounding.full
-                color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
+                color: root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
                 implicitWidth: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
                 implicitHeight: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
 
@@ -212,7 +214,7 @@ StyledRect {
 
                     sourceComponent: Colouriser {
                         source: icon
-                        colorizationColor: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
+                        colorizationColor: root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
                     }
                 }
 
@@ -247,7 +249,7 @@ StyledRect {
                             return "chat";
                         }
 
-                        color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
+                        color: root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3onSurface : Colours.palette.m3onTertiaryContainer
                         font.pointSize: Appearance.font.size.large
                     }
                 }
@@ -295,6 +297,7 @@ StyledRect {
             text: summaryMetrics.elidedText
             maximumLineCount: 1
             height: implicitHeight
+            color: Colours.palette.m3onSurface
 
             states: State {
                 name: "expanded"
@@ -406,6 +409,7 @@ StyledRect {
                 animate: true
                 text: root.expanded ? "expand_less" : "expand_more"
                 font.pointSize: Appearance.font.size.normal
+                color: Colours.palette.m3onSurface
             }
         }
 
