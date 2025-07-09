@@ -4,6 +4,7 @@ import "root:/widgets"
 import "root:/services"
 import "root:/utils"
 import "root:/config"
+import Quickshell
 import QtQuick
 
 Item {
@@ -60,7 +61,7 @@ Item {
             id: icon
 
             animate: true
-            text: Icons.getAppCategoryIcon(Hyprland.activeClient?.wmClass, "desktop_windows")
+            text: Icons.getAppCategoryIcon(WindowManager.activeClient?.wmClass, "desktop_windows")
             color: root.colour
 
             anchors.horizontalCenter: parent.horizontalCenter
@@ -77,7 +78,7 @@ Item {
         TextMetrics {
             id: metrics
 
-            text: Hyprland.activeClient?.title ?? qsTr("Desktop")
+            text: WindowManager.activeClient?.title ?? qsTr("Desktop")
             font.pointSize: Appearance.font.size.smaller
             font.family: Appearance.font.family.mono
             elide: Qt.ElideRight

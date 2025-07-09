@@ -8,9 +8,9 @@ if [ "$1" != "--ignore" ]; then
         exit 1
     fi
 
-    # Check for Hyprland
-    if [ -z "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
-        echo "Error: This script is intended to be run inside a Hyprland session."
+    # Check for Hyprland or Niri
+    if [ -z "$HYPRLAND_INSTANCE_SIGNATURE" ] && [ -z "$NIRI_SOCKET" ]; then
+        echo "Error: This script is intended to be run inside a Hyprland or Niri session."
         echo "Use --ignore to run anyway."
         exit 1
     fi

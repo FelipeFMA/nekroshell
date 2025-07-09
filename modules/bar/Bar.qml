@@ -94,11 +94,11 @@ Item {
                 anchors.rightMargin: -Config.border.thickness
 
                 onWheel: event => {
-                    const activeWs = Hyprland.activeClient?.workspace?.name;
+                    const activeWs = WindowManager.activeClient?.workspace?.name;
                     if (activeWs?.startsWith("special:"))
-                        Hyprland.dispatch(`togglespecialworkspace ${activeWs.slice(8)}`);
-                    else if (event.angleDelta.y < 0 || Hyprland.activeWsId > 1)
-                        Hyprland.dispatch(`workspace r${event.angleDelta.y > 0 ? "-" : "+"}1`);
+                        WindowManager.dispatch(`togglespecialworkspace ${activeWs.slice(8)}`);
+                    else if (event.angleDelta.y < 0 || WindowManager.activeWsId > 1)
+                        WindowManager.dispatch(`workspace r${event.angleDelta.y > 0 ? "-" : "+"}1`);
                 }
             }
 

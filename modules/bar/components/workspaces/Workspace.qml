@@ -32,8 +32,8 @@ Item {
         readonly property string activeLabel: Config.bar.workspaces.activeLabel || (root.isOccupied ? occupiedLabel : label)
 
         animate: true
-        text: Hyprland.activeWsId === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label
-        color: Hyprland.activeWsId === root.ws ? Colours.palette.m3onPrimary : (Config.bar.workspaces.occupiedBg || root.isOccupied ? Colours.palette.m3primary : Colours.palette.m3outlineVariant)
+        text: WindowManager.activeWsId === root.ws ? activeLabel : root.isOccupied ? occupiedLabel : label
+        color: WindowManager.activeWsId === root.ws ? Colours.palette.m3onPrimary : (Config.bar.workspaces.occupiedBg || root.isOccupied ? Colours.palette.m3primary : Colours.palette.m3outlineVariant)
         horizontalAlignment: StyledText.AlignHCenter
         verticalAlignment: StyledText.AlignVCenter
 
@@ -64,7 +64,7 @@ Item {
 
             Repeater {
                 model: ScriptModel {
-                    values: Hyprland.clients.filter(c => c.workspace?.id === root.ws)
+                    values: WindowManager.clients.filter(c => c.workspace?.id === root.ws)
                 }
 
                 MaterialIcon {
