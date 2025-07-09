@@ -53,11 +53,24 @@ Singleton {
 
     Component.onCompleted: reload()
 
+    // Fast workspace polling for responsive switching
     Timer {
-        interval: 1000
+        interval: 100
         running: true
         repeat: true
-        onTriggered: reload()
+        onTriggered: getWorkspaces.running = true
+    }
+
+    // Slower polling for clients and monitors
+    Timer {
+        interval: 2000
+        running: true
+        repeat: true
+        onTriggered: {
+            getClients.running = true;
+            getActiveClient.running = true;
+            getMonitors.running = true;
+        }
     }
 
     Process {
@@ -75,18 +88,21 @@ Singleton {
                     const newWorkspaces = {};
 
                     for (const ws of workspacesList) {
-                        newWorkspaces[ws.idx] = {
-                            id: ws.idx,
-                            idx: ws.idx,
-                            name: ws.name || ws.idx.toString(),
-                            is_focused: ws.is_focused,
-                            is_active: ws.is_active,
-                            output: ws.output,
-                            niri_id: ws.id,
-                            lastIpcObject: {
-                                windows: root.clients.filter(c => c.workspace?.idx === ws.idx).length
-                            }
-                        };
+                        // Only add if we don't have this workspace yet, or if this one is focused
+                        if (!newWorkspaces[ws.idx] || ws.is_focused) {
+                            newWorkspaces[ws.idx] = {
+                                id: ws.idx,
+                                idx: ws.idx,
+                                name: ws.name || ws.idx.toString(),
+                                is_focused: ws.is_focused,
+                                is_active: ws.is_active,
+                                output: ws.output,
+                                niri_id: ws.id,
+                                lastIpcObject: {
+                                    windows: root.clients.filter(c => c.workspace?.idx === ws.idx).length
+                                }
+                            };
+                        }
                     }
 
                     root.workspaces = newWorkspaces;
